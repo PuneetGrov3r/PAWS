@@ -12,35 +12,35 @@ from pprint import pprint
 
 lemmatizer = WordNetLemmatizer()
 ss= [",", "."]
-ques = {"default":{
+ques = {"default":[
 					"How may I help you?\n",
 					"What's going on ",
 					"You should try something new!\n",
-					"Get a life, for christ's sake."},
-        "Where":{
-        			(" do you want to go?", " to?", " would you like to go?"), # Travel based
+					"Get a life, for christ's sake."
+                ],
+        "Where":[
+        			(" do you want to go?", " to?", " would you like to go?", " would you like to sit?"), # Travel based
         			(" do you want to eat?", "Would you like something fancy or easy on pocket?", "?"), # For restraunt     {1st position does not need where}
         			(" do you want "),
-        		},
-        "When":{
+        ],
+        "When":[
         			(" do you want to go?", " do you want to leave?", " would you like to schedule your ", "At what time?","?"), #Travel based    {2nd "departure", "return"}
         			(" do you want to eat?", " would you like it?", "?"), #Restraunt based
         			("","")
-        },
-        "What":{
-        			(" would you like?"),
-        			(" se")
-        },
-        "How":{
+        ],
+        "What":[
+        			(" would you like?"),       # Default
+        			(" ")
+        ],
+        "How":[
         			(" do you want to go?"),       # Default
         			(" would you like to go?", "So, through air or by road?")     # Travel
-        },
-        "Which":{
+        ],
+        "Which":[
         			(" one would you like?"),   #Default
-        			(" ")
-        }
-        "":{}
-        }
+        			(" seat would you like?", ) #Travel
+        ]
+}
 
 zomatoDefaultURL = "https://developers.zomato.com/api/v2.1/"
 zomatoHeader = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": "8c566e4798eca2737581bd3c21390711"}
