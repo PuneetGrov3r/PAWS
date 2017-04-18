@@ -14,9 +14,3 @@ dep_parser = StanfordNeuralDependencyParser(path_to_models_jar=_path_to_models_j
 #print([parse.tree() for parse in dep_parser.raw_parse("The quick brown fox jumps over the lazy dog.")])
 print(json.dumps([list(parse.triples()) for parse in dep_parser.raw_parse("Bell, based in Los Angeles, makes and distributes electronic, computer and building products.")], indent=4))
 
-#sum([[parse.tree() for parse in dep_graphs] for dep_graphs in dep_parser.raw_parse_sents((
-#    "The quick brown fox jumps over the lazy dog.",
-#    "The quick grey wolf jumps over the lazy fox."))], [])
-#sum([[parse.tree() for parse in dep_graphs] for dep_graphs in dep_parser.parse_sents((
-#    "I 'm a dog".split(),
-#    "This is my friends ' cat ( the tabby )".split(),))], [])
