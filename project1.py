@@ -44,6 +44,12 @@ ques = {"default":[
 
 services = ["Zomato", "IndianRail", "Wikipedia", "Goibibo", "DarkSky", "Uber", "Ebay"]
 probArray = ['0','0','0','0','0','0','0']
+words = [    #   verbs                                     nouns                                             others
+            ({"eat":0, "date":0}, {"date":0, "breakfast":0, "lunch":0, "dinner":0, "supper":0, "food":0}, { "hungry" : 0 },{"total":9, "rep":1}),         # Zomato
+            ({""},{""},{""}),
+            (),(),(),(),()
+]
+
 
 zomatoDefaultURL = "https://developers.zomato.com/api/v2.1/"
 zomatoHeader = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": "8c566e4798eca2737581bd3c21390711"}
