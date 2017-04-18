@@ -46,8 +46,11 @@ services = ["Zomato", "IndianRail", "Wikipedia", "Goibibo", "DarkSky", "Uber", "
 probArray = ['0','0','0','0','0','0','0']
 words = [    #   verbs                                     nouns                                             others
             ({"eat":0, "date":0}, {"date":0, "breakfast":0, "lunch":0, "dinner":0, "supper":0, "food":0}, { "hungry" : 0 },{"total":9, "rep":1}),         # Zomato
-            ({""},{""},{""}),
-            (),(),(),(),()
+            ({"go", "book", "reserve"}, {"train", "railway", "ticket", "seat", "sleeper"}, {"", ""}),         # IndianRail
+            (),         # Goibibo
+            (),         # darksky
+            (),         # uber
+            ()          # ebay
 ]
 
 
