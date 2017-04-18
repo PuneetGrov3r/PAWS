@@ -42,6 +42,9 @@ ques = {"default":[
         ]
 }
 
+services = ["Zomato", "IndianRail", "Wikipedia", "Goibibo", "DarkSky", "Uber", "Ebay"]
+probArray = ['0','0','0','0','0','0','0']
+
 zomatoDefaultURL = "https://developers.zomato.com/api/v2.1/"
 zomatoHeader = {"User-agent": "curl/7.43.0", "Accept": "application/json", "user_key": "8c566e4798eca2737581bd3c21390711"}
 zomatoAPI = {"locations":"/locations?", "location_details":"/location_details?", "cuisines":"/cuisines?", "restraunt":"/restraunt?", "reviews":"/reviews?"}
