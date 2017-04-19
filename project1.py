@@ -9,6 +9,9 @@ stemmer = SnowballStemmer("english")
 import json
 import requests
 from pprint import pprint
+import pyowm
+
+owm = pyowm.OWM('219cda475ab3a9c0a17abe166b25a239') 
 
 lemmatizer = WordNetLemmatizer()
 ss= [",", "."]
@@ -45,12 +48,13 @@ ques = {"default":[
 services = ["Zomato", "IndianRail", "Wikipedia", "Goibibo", "DarkSky", "Uber", "Ebay"]
 probArray = ['0','0','0','0','0','0','0']
 words = [    #   verbs                                     nouns                                             others
-            ({"eat":0, "date":0}, {"date":0, "breakfast":0, "lunch":0, "dinner":0, "supper":0, "food":0}, { "hungry" : 0 },{"total":9, "rep":1}),         # Zomato
-            ({"go", "book", "reserve"}, {"train", "railway", "ticket", "seat", "sleeper"}, {"", ""}),         # IndianRail
-            (),         # Goibibo
-            (),         # darksky
-            (),         # uber
-            ()          # ebay
+            ({"eat":0, "date":0}, {"date":0, "breakfast":0, "lunch":0, "dinner":0, "supper":0, "food":0}, { "hungry" : 0 }, {"total":9, "rep":1}),         # Zomato
+            ({"go":0, "book":0, "reserve":0}, {"train":0, "railway":0, "ticket":0, "seat":0, "sleeper":0, "birth":0}, {"", ""}),         # IndianRail
+            ({}, {"define":0, "meaning":0}, {"what":0, "who":0}),         # Wikipedia
+            ({"go":0, "book":0, "reserve":0, "fly":0}, {"train":0, "ticket":0, "seat":0, "bus":0, "sleeper":0, "air":0, "airplane":0, "flight":0}, {}),         # Goibibo
+            ({"raining":0}, {"weather":0}, {"sunny":0, "cloudy":0, "windy":0, "stormy":0}),         # darksky
+            ({"go":0, "book":0}, {"cab":0, "taxi":0, "ride":0, "uber":0}, {}, {"total":6, "rep":0}),         # uber
+            ({"buy":0, "shop":0}, {"online":0, "ebay":0}, {}, {"total":4, "rep":0})          # ebay
 ]
 
 
