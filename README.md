@@ -1,1 +1,8 @@
-CoreNLP : http://nlp.stanford.edu/software/stanford-corenlp-full-2016-10-31.zip \n Model : http://nlp.stanford.edu/software/stanford-english-kbp-corenlp-2016-10-31-models.jar \n . or \n . http://nlp.stanford.edu/software/stanford-english-corenlp-2016-10-31-models.jar \n \n \n { Set the paths for the corresponding files }\n
+CoreNLP : 
+http://nlp.stanford.edu/software/stanford-corenlp-full-2016-10-31.zip
+Model : 
+http://nlp.stanford.edu/software/stanford-english-kbp-corenlp-2016-10-31-models.jar 
+or 
+http://nlp.stanford.edu/software/stanford-english-corenlp-2016-10-31-models.jar 
+
+Set the paths for the corresponding files
