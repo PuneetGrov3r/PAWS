@@ -11,7 +11,7 @@ import requests
 from pprint import pprint
 import pyowm
 
-owm = pyowm.OWM('219cda475ab3a9c0a17abe166b25a239')
+owm = pyowm.OWM('219cda475ab3a9c0a17abe166b25a239') 
 
 lemmatizer = WordNetLemmatizer()
 ss= [",", "."]
@@ -107,5 +107,6 @@ while(cont):
     response = requests.get(url, headers=zomatoHeader)
     pprint(response.json())
 
-
+    
     cont = False
+# THE END
