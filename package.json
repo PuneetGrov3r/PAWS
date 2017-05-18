@@ -1,0 +1,30 @@
+{
+  "name": "assistant",
+  "version": "1.0.0",
+  "description": "NLP based assistant",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PuneetGrov3r/new.git"
+  },
+  "keywords": [
+    "nlp",
+    "assistant",
+    "apis"
+  ],
+  "author": "R. Varun, Puneet Grover",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/PuneetGrov3r/new/issues"
+  },
+  "homepage": "https://github.com/PuneetGrov3r/new#readme",
+  "dependencies": {
+    "body-parser": "^1.17.1",
+    "express": "^4.15.3",
+    "morgan": "^1.8.1",
+    "prettyjson": "^1.2.1"
+  }
+}
