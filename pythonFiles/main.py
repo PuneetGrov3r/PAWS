@@ -70,17 +70,18 @@ class Tokenizer():
     def tokenize(self, sent):
         return nltk.word_tokenize(sent)
 
-
-name, type, input = argv
-if type == 'p':
-    parser = Parser()
-    print(parser.stanParse(input))
-elif type == 's':
-    synonym = Synonym()
-    print(synonym.getSynonyms(input))
-elif type == 't':
-    tokenizer = Tokenizer()
-    print(tokenizer.tokenize(input))
-elif type == 'n':
-    nv = Parser()
-    print(nv.extractNV(input))
+if __name__ == '__main__':
+    
+    name, type, input = argv
+    if type == 'p':
+        parser = Parser()
+        print(parser.stanParse(input))
+    elif type == 's':
+        synonym = Synonym()
+        print(synonym.getSynonyms(input))
+    elif type == 't':
+        tokenizer = Tokenizer()
+        print(tokenizer.tokenize(input))
+    elif type == 'n':
+        nv = Parser()
+        print(nv.extractNV(input))

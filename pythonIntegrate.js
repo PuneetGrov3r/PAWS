@@ -1,5 +1,3 @@
-'use strict'
-
 const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 var async = require('async');
@@ -33,10 +31,6 @@ helperFunctions.prototype.parseTuple = (type, input, callback) => {
     });
   }catch(err){
     callback(err, null);
-  }
-
-  function term(type, input, callback){
-
   }
 }
 
