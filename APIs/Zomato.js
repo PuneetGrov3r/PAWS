@@ -9,7 +9,7 @@ let state = {
 	url:url,
 	method:'GET',
 	headers:{
-		'user-key': '8c566e4798eca2737581bd3c21390711'
+		'user-key': 'xxx'
 	},
 }
 
