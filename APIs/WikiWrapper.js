@@ -2,8 +2,15 @@
 
 const req = require('request');
 
-const Wiki = (state) => ({
-	getSummary: (title) => {
+const Wiki = () => ({
+	getSummary: (title, callback) => {
+		let state = {
+			method: 'GET',
+			url: 'https://en.wikipedia.org/w/api.php',
+			headers: {
+				'Api-User-Agent': 'Example/1.0',
+			}
+		}
 		state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';  
 		state.url += '&titles=' + title;
 		req(state, (err, res, body) => {
@@ -12,22 +19,26 @@ const Wiki = (state) => ({
 					resolve(JSON.parse(body)['query']['pages']);
 				});
 				p.then( (data) => {
-					return data[Object.keys(data)[0]];
-				})
-				.then( (data) => {
-					console.log(data['extract'].replace(/\(.*?\)/g, ""));
+					callback(null, [ data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""), Wiki().getURL(Object.keys(data)[0], callback) ][0]);	// Yeah!
 				})
 				.catch( (error) => {
-					console.log(error);
+					callback(err, null);
 				});
 			}
 			else if(err){
-				console.log(err);
+				console.log(err, null);
 			}
 		})
 	},
 
-	getLocality: (title) => {
+	getLocality: (title, callback) => {
+		let state = {
+			method: 'GET',
+			url: 'https://en.wikipedia.org/w/api.php',
+			headers: {
+				'Api-User-Agent': 'Example/1.0',
+			}
+		}
 		state.url += '?action=query&prop=categories&format=json&clshow=!hidden';
 		state.url += '&titles=' + title;
 		req(state, (err, res, body) => {
@@ -40,28 +51,40 @@ const Wiki = (state) => ({
 					for(var i = 0; i < data.length; ++i){
 						let t = data[i]['title'];
 						if(t.includes('Cities') || t.includes('Territories') || t.includes('Capitals')){
+							callback(null, title);
 							console.log('City: ' + title);
 							break;
 						}else if(t.includes('States')){
+							callback(null, title);
 							console.log('State: ' + title);
 							break;
 						}else if(t.includes('Countries')){
+							callback(null, title);
 							console.log('Country: ' + title);
 							break;
 						}else if(t.includes('Continents')){
+							callback(null, title);
 							console.log('Continent: ' + title);
 						}
 						//console.log(t);
 					}
 				})
 				.catch( (error) => {
-					console.log(error);
+					callback(error, null);
+					//console.log(error);
 				});
 			}
 		});
 	},
 
-	getURL: (id) => {
+	getURL: (id, callback) => {
+		let state = {
+			method: 'GET',
+			url: 'https://en.wikipedia.org/w/api.php',
+			headers: {
+				'Api-User-Agent': 'Example/1.0',
+			}
+		}
 		state.url += '?action=query&format=json&prop=info&inprop=url';
 		state.url += '&pageids=' + id;
 		
@@ -71,8 +94,13 @@ const Wiki = (state) => ({
 					resolve(JSON.parse(b));
 				});
 				p1.then( (parsed) => {
-					return parsed;
-				});
+					parsed = parsed['query']['pages'];
+					parsed = parsed[Object.keys(parsed)[0]];
+					callback(null, parsed['fullurl']);
+				})
+				.catch( (err) => {
+					callback(err, null);
+				})
 			}
 		});
 	}
@@ -80,12 +108,12 @@ const Wiki = (state) => ({
 
 
 
-let state = {
-	method: 'GET',
-	url: 'https://en.wikipedia.org/w/api.php',
-	headers: {
-		'Api-User-Agent': 'Example/1.0',
-	}
-}
 
-Wiki(state).getURL('Zomato');
+
+Wiki().getSummary('Zomato', (err, data) => {
+	if(err){
+		console.log(err);
+		return;
+	}
+	console.log(data);
+});

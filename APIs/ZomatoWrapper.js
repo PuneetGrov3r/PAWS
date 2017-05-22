@@ -8,9 +8,17 @@ const request = require('request');
 
 
 
-const Common = (state) => ({
+const Common = (key) => ({
 
-	categories: () => {
+	categories: (callback) => {
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url = state.url + '/categories';
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
@@ -22,7 +30,7 @@ const Common = (state) => ({
 		})
 	},
 
-	cities: (more = {q:'delhi', lat:'', lon:'', city_ids:'', count:'5'}) => {
+	cities: (more = {q:'delhi', lat:'', lon:'', city_ids:'', count:'5'}, callback) => {
 		//   more = {
 		//				q: q,                 // query by city name
 		//				lat: lat,
@@ -30,6 +38,14 @@ const Common = (state) => ({
 		//				city_ids: city_ids,   // '1,2,3,4,5'
 		//				count: count
 		//   }
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url += '/cities';
 		let temp =  '?q=' + more.q;
 		if(more.lat.length !== 0) temp += '&lat=' + more.lat;
@@ -51,13 +67,21 @@ const Common = (state) => ({
 		})
 	},
 
-	collections: (more = {city_id:'1', lat:'', lon:'', count:'10'}) => {
+	collections: (more = {city_id:'1', lat:'', lon:'', count:'10'}, callback) => {
 		//   more = {
 		//				city_id: city_id,
 		//				lat: lat,
 		//				lon: lon,
 		//				count: count
 		//   }
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url += '/collections';
 		let temp = '?city_id=' + more.city_id;
 		if(more.lat.length !== 0) temp += '&lat=' + more.lat;
@@ -77,12 +101,20 @@ const Common = (state) => ({
 		})
 	},
 
-	cuisines: (more = {city_id:'1', lat:'', lon:''}) => {
+	cuisines: (more = {city_id:'1', lat:'', lon:''}, callback) => {
 		//   more = {
 		//				city_id: city_id,
 		//				lat: lat,
 		//				lon: lon,
 		//   }
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url += '/cuisines';
 		let temp = '?city_id=' + more.city_id;
 		if(more.lat.length !== 0) temp += '&lat=' + more.lat;
@@ -99,12 +131,20 @@ const Common = (state) => ({
 		})
 	},
 
-	establishments: (more = {city_id:'1', lat:'', lon:'', count:'10'}) => {
+	establishments: (more = {city_id:'1', lat:'', lon:'', count:'10'}, callback) => {
 		//   more = {
 		//				city_id: city_id,
 		//				lat: lat,
 		//				lon: lon,
 		//   }
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url += '/establishments';
 		let temp = '?city_id=' + more.city_id;
 		if(more.lat.length !== 0) temp += '&lat=' + more.lat;
@@ -121,11 +161,19 @@ const Common = (state) => ({
 		})
 	},
 
-	geocode: (more = {lat:'28', lon:'77'}) => {
+	geocode: (more = {lat:'28', lon:'77'}, callback) => {
 		//   more = {
 		//				lat: lat,
 		//				lon: lon,
 		//   }
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url += '/geocode';
 
 		let temp = '?lat=' + more.lat;
@@ -168,13 +216,21 @@ const Common = (state) => ({
 
 
 
-const Restaurant = (state) => ({
+const Restaurant = (key) => ({
 	
-	dailymenu: (res_id = '-9999') => {
+	dailymenu: (res_id = '-9999', callback) => {
 		if(res_id === '-9999'){
 			console.log('You need to provide "res_id" as argument...');
 			return;
 		}
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url += '/dailymenu?res_id=' + res_id;
 		console.log('Is it working or not?');
 
@@ -186,11 +242,19 @@ const Restaurant = (state) => ({
 		});
 	},
 
-	restaurant: (res_id = '-9999') => {
+	restaurant: (res_id = '-9999', callback) => {
 		if(res_id === '-9999'){
 			console.log('You need to provide "res_id" as argument...');
 			return;
 		}
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url += '/restaurant?res_id=' + res_id;
 
 		request(state, (err, res, body) => {
@@ -212,7 +276,7 @@ const Restaurant = (state) => ({
 		});
 	},
 
-	reviews: (more = {res_id: '-9999', start: '', count: ''}) => {
+	reviews: (more = {res_id: '-9999', start: '', count: ''}, callback) => {
 		//
 		//	more = {
 		//		res_id: res_id
@@ -224,6 +288,14 @@ const Restaurant = (state) => ({
 			console.log('You need to provide "res_id" as argument...');
 			return;
 		}
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url += '/reviews';
 		let temp = '?res_id=' + more.res_id;
 		if(more.start && (more.start.length !== 0)) temp += '&start=' + more.start;
@@ -255,7 +327,7 @@ const Restaurant = (state) => ({
 		});
 	},
 
-	search: (more = { entity_id : '', entity_type : '', q : 'night', start : '', count : '', lat : '28', lon : '77', radius : '50000', cuisines : '', establishment_type : '', collection_id : '', category : '', sort : '', order : '' }) => {
+	search: (more = { entity_id : '', entity_type : '', q : 'night', start : '', count : '', lat : '28', lon : '77', radius : '50000', cuisines : '', establishment_type : '', collection_id : '', category : '', sort : '', order : '' }, callback) => {
 		//
 		//	more = {
 		//		entity_id = '',				// entity_id = location id
@@ -274,7 +346,14 @@ const Restaurant = (state) => ({
 		//		order = ''					// asc or desc
 		//	}
 		//
-
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url += '/search';
 		let temp = '';
 		if(more.q && more.q.length !== 0) temp += '?q=' + more.q;
@@ -336,7 +415,7 @@ const Restaurant = (state) => ({
 
 
 const Location = (state) => ({
-	locations: (more = { query : 'delhi', lat: '', lon: '', count: '5'}) => {
+	locations: (more = { query : 'delhi', lat: '', lon: '', count: '5'}, callback) => {
 		//
 		//	more = {
 		//		query : query,			//suggestion for location name
@@ -345,6 +424,14 @@ const Location = (state) => ({
 		//		count: count 			//max number of results to fetch
 		//	}
 		//
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url += '/locations';
 		let temp = '?query=' + more.query;
 		if(more.lat && more.lat.length !== 0) temp += '&lat=' more.lat;
@@ -377,13 +464,21 @@ const Location = (state) => ({
 		});
 	},
 
-	location_details: (more = { entity_id: '793', entity_type: 'group' }) => {
+	location_details: (more = { entity_id: '793', entity_type: 'group' }, callback) => {
 		//
 		//	more = {
 		//		entity_id: entity_id		//location id obtained from locations api
 		//		entity_type: entity_type	//location type obtained from locations api
 		//	}
 		//
+		let state = {
+			url:"https://developers.zomato.com/api/v2.1",
+			method:'GET',
+			headers:{
+				'user-key': ''
+			},
+		};
+		state.headers['user-key'] = key;
 		state.url +='/location_details';
 		let temp = '?entity_id=' + more.entity_id;
 		temp += '&entity_type=' + entity_type;
@@ -425,23 +520,16 @@ const Location = (state) => ({
 
 
 
-const Custom = (state) => ({
+const Custom = (key) => ({
 
-	fetchByRestName: (name) => {
+	fetchByRestName: (name, callback) => {
 		
 	}
 });
 
-const url = "https://developers.zomato.com/api/v2.1";
-
-let state = {
-	url:url,
-	method:'GET',
-	headers:{
-		'user-key': 'xxx'
-	},
-};
 
 
-Restaurant(state).search();
+
+
+Restaurant('8c566e4798eca2737581bd3c21390711').search();
 
