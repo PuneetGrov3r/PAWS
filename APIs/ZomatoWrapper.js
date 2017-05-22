@@ -4,14 +4,8 @@
 
 const request = require('request');
 
-const url = "https://developers.zomato.com/api/v2.1";
-let state = {
-	url:url,
-	method:'GET',
-	headers:{
-		'user-key': '8c566e4798eca2737581bd3c21390711'
-	},
-};
+
+
 
 
 const Common = (state) => ({
@@ -432,10 +426,21 @@ const Location = (state) => ({
 
 
 const Custom = (state) => ({
-	
+
+	fetchByRestName: (name) => {
+		
+	}
 });
 
+const url = "https://developers.zomato.com/api/v2.1";
 
+let state = {
+	url:url,
+	method:'GET',
+	headers:{
+		'user-key': 'xxx'
+	},
+};
 
 
 Restaurant(state).search();
