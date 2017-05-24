@@ -103,6 +103,47 @@ const Wiki = () => ({
 				})
 			}
 		});
+	},
+
+	getDefination: (word, callback) => {
+		let state = {
+			method: 'GET',
+			url: 'https://en.wiktionary.org/w/api.php',
+			headers: {
+				'Api-User-Agent': 'Example/1.0',
+			}
+		}
+		state.url += '?format=json&action=query&prop=extracts';
+		state.url += '&titles=' + word;
+
+		req(state, (er, re, b) => {
+			if(!er && re.statusCode === 200){
+				let p = new Promise( (resolve, reject) => {
+					resolve(JSON.parse(b)['query']['pages']);
+				});
+				p.then( (data) => {
+					return data[Object.keys(data)[0]]['extract'].replace(/<span.*?<\/span>|<p>.*?<\/p>/g, "").replace(/<h.>.*?<\/h.>/g, "").replace(/<.*?>/g, "").replace(/(\n)+/g,"\n").split('\n');
+					//console.log(data);
+				})
+				.then( (data) => {
+					let i;
+					let regex = /^( )/;
+					let regex2 = /\d{4}|\(.*\)|.*Wiki.*|(  )|.*William.*/;
+					for(i=0;i<data.length;i++){
+						if( !regex.test(data[i]) || data[i].length < 14 || regex2.test(data[i])){
+							data.splice(i, 1);
+							i--;
+						}
+					}
+					console.log(data);
+				})
+				.catch( (err) => {
+					callback(err, null)
+				})
+			}else {
+				console.log(er);
+			}
+		});
 	}
 });
 
@@ -110,7 +151,7 @@ const Wiki = () => ({
 
 
 
-Wiki().getSummary('Zomato', (err, data) => {
+Wiki().getDefination('cool', (err, data) => {
 	if(err){
 		console.log(err);
 		return;

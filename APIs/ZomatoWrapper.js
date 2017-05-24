@@ -3,9 +3,7 @@
 //Node version 6.x or above required
 
 const request = require('request');
-
-
-
+const co = require('co');
 
 
 const Common = (key) => ({
@@ -22,10 +20,18 @@ const Common = (key) => ({
 		state.url = state.url + '/categories';
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
-				let data = JSON.parse(body);
-				data['categories'].forEach((element) => {
-					console.log(element['categories']);
+				let p = new Promise((resolve, reject) => {
+					resolve(JSON.parse(body));
+				});
+				p.then( (data) => {
+					data['categories'].forEach((element) => {
+						console.log(element['categories']);
+					});
 				})
+				.catch( (error) => {
+					callback(error, null);
+				});
+				
 			}
 		})
 	},
@@ -57,11 +63,18 @@ const Common = (key) => ({
 		
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
-				let data = JSON.parse(body);
-				data['location_suggestions'].forEach((element) => {
-					console.log('city_id: ' + element['id']);
-					console.log('   country_id : ' + element['country_id'])
-					console.log('   name: ' + element['name']);
+				let p = new Promise((resolve, reject) => {
+					resolve(JSON.parse(body));
+				});
+				p.then( (data) => {
+					data['location_suggestions'].forEach((element) => {
+						console.log('city_id: ' + element['id']);
+						console.log('   country_id : ' + element['country_id'])
+						console.log('   name: ' + element['name']);
+					});
+				})
+				.catch( (error) => {
+					callback(error, null);
 				});
 			}
 		})
@@ -91,12 +104,21 @@ const Common = (key) => ({
 		state.url += temp;
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
-				let data = JSON.parse(body);
-				data['collections'].forEach((element) => {
-					console.log('Type: ' + element['collection']['title']);
-					console.log('   Description : ' + element['collection']['description'])
-					console.log('   No. of Restaurants: ' + element['collection']['res_count']);
+				let p = new Promise((resolve, reject) => {
+					resolve(JSON.parse(body));
 				});
+				p.then( (data) => {
+					data['collections'].forEach((element) => {
+						//console.log(element);
+						console.log('Type: ' + element['collection']['title'] + ' (id:' + element['collection']['collection_id'] + ')');
+						console.log('   Description : ' + element['collection']['description'])
+						console.log('   No. of Restaurants: ' + element['collection']['res_count']);
+					});
+				})
+				.catch( (error) => {
+					callback(error, null);
+				});
+				
 			}
 		})
 	},
@@ -123,15 +145,22 @@ const Common = (key) => ({
 		state.url += temp;
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
-				let data = JSON.parse(body);
-				data['cuisines'].forEach((element) => {
-					console.log(element['cuisine']['cuisine_name'] + '  (id: ' + element['cuisine']['cuisine_id'] + ')');
+				let p = new Promise((resolve, reject) => {
+					resolve(JSON.parse(body));
+				});
+				p.then( (data) => {
+					data['cuisines'].forEach((element) => {
+						console.log(element['cuisine']['cuisine_name'] + '  (id: ' + element['cuisine']['cuisine_id'] + ')');
+					});
+				})
+				.catch( (error) => {
+					callback(error, null);
 				});
 			}
 		})
 	},
 
-	establishments: (more = {city_id:'1', lat:'', lon:'', count:'10'}, callback) => {
+	establishments: (more = {city_id:'1', lat:'', lon:'', count:''}, callback) => {
 		//   more = {
 		//				city_id: city_id,
 		//				lat: lat,
@@ -153,15 +182,22 @@ const Common = (key) => ({
 		state.url += temp;
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
-				let data = JSON.parse(body);
-				data['establishments'].forEach((element) => {
-					console.log(element['establishment']['name'] + ' (id: ' + element['establishment']['id'] + ')');
+				let p = new Promise((resolve, reject) => {
+					resolve(JSON.parse(body));
+				});
+				p.then( (data) => {
+					data['establishments'].forEach((element) => {
+						console.log(element['establishment']['name'] + ' (id: ' + element['establishment']['id'] + ')');
+					});
+				})
+				.catch( (error) => {
+					callback(error, null);
 				});
 			}
 		})
 	},
 
-	geocode: (more = {lat:'28', lon:'77'}, callback) => {
+	geocode: (more = {lat:'28.6118815', lon:'77.0345796'}, callback) => {
 		//   more = {
 		//				lat: lat,
 		//				lon: lon,
@@ -182,31 +218,38 @@ const Common = (key) => ({
 		state.url += temp;
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
-				let element = JSON.parse(body);
-
-				console.log(element['link']);
-				console.log('Location : ' + element['location']['title']);
-				console.log('Popularity: ' + element['popularity']['popularity'] + ',  NightLifeIndex: ' + element['popularity']['nightlife_index']);
-				console.log('Top Cuisines:')
-				element['popularity']['top_cuisines'].forEach((el) => {
-					console.log('    ' + el);
+				let p = new Promise((resolve, reject) => {
+					resolve(JSON.parse(body));
 				});
-				console.log('Nearby Restaurants:');
-				element['nearby_restaurants'].forEach((res) => {
-					console.log('    ' + res['restaurant']['name'] + ' (id: ' + res['restaurant']['R']['res_id'] + ')');
-					console.log('        ' + '{' + res['restaurant']['location']['address'] + '}');
-					console.log('        ' + res['restaurant']['cuisines']);
-					console.log('        Avg Cost for 2: '+ res['restaurant']['currency'] + res['restaurant']['average_cost_for_two'] + ' (Price Range: ' + res['restaurant']['price_range'] + ')');
-					//  
-					//   res['restaurant']['menu_url']
-					//   res['restaurant']['has_online_delivery']
-					//   res['restaurant']['is_delivering_now']
-					//   res['restaurant']['order_url']
-					//   res['restaurant']['has_table_booking']
-					//   res['restaurant']['book_url']
-					//   res['restaurant']['events_url']
-					//
+				p.then( (data) => {
+					console.log(element['link']);
+					console.log('Location : ' + element['location']['title']);
+					console.log('Popularity: ' + element['popularity']['popularity'] + ',  NightLifeIndex: ' + element['popularity']['nightlife_index']);
+					console.log('Top Cuisines:')
+					element['popularity']['top_cuisines'].forEach((el) => {
+						console.log('    ' + el);
+					});
+					console.log('Nearby Restaurants:');
+					element['nearby_restaurants'].forEach((res) => {
+						console.log('    ' + res['restaurant']['name'] + ' (id: ' + res['restaurant']['R']['res_id'] + ')');
+						console.log('        ' + '{' + res['restaurant']['location']['address'] + '}');
+						console.log('        ' + res['restaurant']['cuisines']);
+						console.log('        Avg Cost for 2: '+ res['restaurant']['currency'] + res['restaurant']['average_cost_for_two'] + ' (Price Range: ' + res['restaurant']['price_range'] + ')');
+						//  
+						//   res['restaurant']['menu_url']
+						//   res['restaurant']['has_online_delivery']
+						//   res['restaurant']['is_delivering_now']
+						//   res['restaurant']['order_url']
+						//   res['restaurant']['has_table_booking']
+						//   res['restaurant']['book_url']
+						//   res['restaurant']['events_url']
+						//
+					});
+				})
+				.catch( (error) => {
+					callback(error, null);
 				});
+				
 
 			}
 		})
@@ -236,8 +279,15 @@ const Restaurant = (key) => ({
 
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
-				let data = JSON.parse(body);
-				console.log(data);
+				let p = new Promise((resolve, reject) => {
+					resolve(JSON.parse(body));
+				});
+				p.then( (data) => {
+					console.log(data);
+				})
+				.catch( (error) => {
+					callback(error, null);
+				});
 			}
 		});
 	},
@@ -259,19 +309,28 @@ const Restaurant = (key) => ({
 
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
-				let data = JSON.parse(body);
-				console.log(data['name']);
-				console.log('{' + data['location']['address'] + '}');
-				console.log('Cuisines: ' + data['cuisines']);
-				console.log('Avg. for two: ' + data['currency'] + data['average_cost_for_two'] + ' (Price Range: ' + data['price_range'] + ')');
-				//
-				//	data['menu_url']
-				//	data['has_online_delivery']
-				//	data['is_delivering_now']
-				//	data['events_url']
-				//	data['user_rating']['aggregate_rating']
-				//	data['has_table_booking']
-				//
+					let p = new Promise((resolve, reject) => {
+					resolve(JSON.parse(body));
+				});
+				p.then( (data) => {
+					console.log(data['name']);
+					console.log('{' + data['location']['address'] + '}');
+					console.log('Cuisines: ' + data['cuisines']);
+					console.log('Avg. for two: ' + data['currency'] + data['average_cost_for_two'] + ' (Price Range: ' + data['price_range'] + ')');
+					//
+					//	data['menu_url']
+					//	data['has_online_delivery']
+					//	data['is_delivering_now']
+					//	data['events_url']
+					//	data['user_rating']['aggregate_rating']
+					//	data['has_table_booking']
+					//
+				})
+				.catch( (error) => {
+					callback(error, null);
+				});
+
+				
 			}
 		});
 	},
@@ -327,7 +386,9 @@ const Restaurant = (key) => ({
 		});
 	},
 
-	search: (more = { entity_id : '', entity_type : '', q : 'night', start : '', count : '', lat : '28', lon : '77', radius : '50000', cuisines : '', establishment_type : '', collection_id : '', category : '', sort : '', order : '' }, callback) => {
+	search: (more = { entity_id : '', entity_type : '', q : 'night', start : '', count : '', lat : '28', 
+						lon : '77', radius : '50000', cuisines : '', establishment_type : '',
+						 collection_id : '', category : '', sort : '', order : '' }, callback) => {
 		//
 		//	more = {
 		//		entity_id = '',				// entity_id = location id
@@ -434,9 +495,9 @@ const Location = (state) => ({
 		state.headers['user-key'] = key;
 		state.url += '/locations';
 		let temp = '?query=' + more.query;
-		if(more.lat && more.lat.length !== 0) temp += '&lat=' more.lat;
-		if(more.lon && more.lon.length !== 0) temp += '&lon=' more.lon;
-		if(more.count && more.count.length !== 0) temp += '&count=' more.count;
+		if(more.lat && more.lat.length !== 0) temp += '&lat=' + more.lat;
+		if(more.lon && more.lon.length !== 0) temp += '&lon=' + more.lon;
+		if(more.count && more.count.length !== 0) temp += '&count=' + more.count;
 		state.url += temp;
 
 		request(state, (err, res, body) => {
@@ -448,7 +509,7 @@ const Location = (state) => ({
 					data['location_suggestions'].forEach( (el) => {
 						console.log(el['entity_type']);
 						console.log(el['entity_id']);
-						console.log(['title']);
+						console.log(el['title']);
 						console.log(el['latitude']);
 						console.log(el['city_id']);
 						console.log(el['city_name']);
@@ -523,13 +584,15 @@ const Location = (state) => ({
 const Custom = (key) => ({
 
 	fetchByRestName: (name, callback) => {
-		
 	}
 });
 
 
+//Common('8c566e4798eca2737581bd3c21390711').geocode();
 
 
-
-Restaurant('xxx').search();
+Restaurant('8c566e4798eca2737581bd3c21390711').search({ entity_id : '0', entity_type : '', q : '',
+						start : '', count : '', lat : '28',
+						lon : '77', radius : '50000', cuisines : '', establishment_type : '',
+						collection_id : '', category : '', sort : 'desc', order : '' });
 

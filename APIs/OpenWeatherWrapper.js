@@ -4,7 +4,7 @@
 const req = require('request');
 
 const Weather = (key) => ({
-	currentWeather: (lat = '28.2354', lon = '77.0238', callback) => {
+	currentWeather: (lat = '28.612205', lon = '77.034980', callback) => {
 		const state = {
 			method: 'GET',
 			url: 'http://api.openweathermap.org/data/2.5/weather'
@@ -27,7 +27,7 @@ const Weather = (key) => ({
 		})
 	},
 
-	forecast: (lat = '28.2354', lon = '77.0238', callback) => {
+	forecast: (lat = '28.612205', lon = '77.034980', callback) => {
 		const state = {
 			method: 'GET',
 			url: 'http://api.openweathermap.org/data/2.5/forecast'
