@@ -1,9 +1,13 @@
-'use strict'
+
 
 //Node version 6.x or above required
 
 const request = require('request');
 const co = require('co');
+const fs = require('fs');
+
+
+
 
 
 const Common = (key) => ({
@@ -139,8 +143,8 @@ const Common = (key) => ({
 		state.headers['user-key'] = key;
 		state.url += '/cuisines';
 		let temp = '?city_id=' + more.city_id;
-		if(more.lat.length !== 0) temp += '&lat=' + more.lat;
-		if(more.lon.length !== 0) temp += '&lon=' + more.lon;
+		if(more.lat && more.lat.length !== 0) temp += '&lat=' + more.lat;
+		if(more.lon && more.lon.length !== 0) temp += '&lon=' + more.lon;
 
 		state.url += temp;
 		request(state, (err, res, body) => {
@@ -149,9 +153,7 @@ const Common = (key) => ({
 					resolve(JSON.parse(body));
 				});
 				p.then( (data) => {
-					data['cuisines'].forEach((element) => {
-						console.log(element['cuisine']['cuisine_name'] + '  (id: ' + element['cuisine']['cuisine_id'] + ')');
-					});
+					callback(null, data['cuisines']);
 				})
 				.catch( (error) => {
 					callback(error, null);
@@ -415,9 +417,9 @@ const Restaurant = (key) => ({
 			},
 		};
 		state.headers['user-key'] = key;
-		state.url += '/search';
+		state.url += '/search?';
 		let temp = '';
-		if(more.q && more.q.length !== 0) temp += '?q=' + more.q;
+		if(more.q && more.q.length !== 0) temp += 'q=' + more.q;
 		if(more.entity_id && more.entity_id.length !== 0) temp += '&entity_id=' + more.entity_id;
 		if(more.entity_type && more.entity_type.length !== 0) temp += '&entity_type=' + more.entity_type;
 		if(more.start && more.start.length !== 0) temp += '&start=' + more.start;
@@ -439,29 +441,47 @@ const Restaurant = (key) => ({
 					resolve(JSON.parse(body));
 				});
 				p.then((data) => {
-					console.log('Results Found: ' + data['results_found']);
-					// data['results_shown']
-					data['restaurants'].forEach((restaurant) => {
-						let res = restaurant['restaurant'];
-						console.log(res['name']);
-						console.log(res['location']['address']);
-						// res['location']['city']
-						// res['location']['city_id']
-						// res['location']['latitude']
-						// res['location']['country_id']
-						// res['locality']['zipcode']
-						console.log(res['cuisines']);
-						console.log(res['currency'] + res['average_cost_for_two'] + ' (' + res['price_range'] + ')');
-						console.log(res['offers']);
-						console.log(res['user_rating']['aggregate_rating']);
-						console.log(res['menu_url']);
-						console.log(res['has_online_delivery']);
-						console.log(res['is_delivering_now']);
-						console.log(res['order_url']);
-						console.log(res['has_table_booking']);
-						console.log(res['events_url']);
-						console.log(res['establishment_types'])
+					
+					//console.log(data);
+					//console.log(data['restaurants'][0]);
+					data['restaurants'].forEach( (d) => {
+						let o = {};
+						d = d['restaurant'];
+						o['res_id'] = d['R']['res_id'];
+						o['name'] = d['name'];
+						//o['establishment_types'] = d['establishment_types'];
+						//console.log(o);
+						
 					});
+					//console.log('Results Found: ' + data['results_found']);
+					
+					// data['results_shown']
+					//
+					//
+					//callback(null, [data['restaurants'], more.cuisines]);
+					//
+					//
+					//data['restaurants'].forEach((restaurant) => {
+					//	let res = restaurant['restaurant'];
+					//	console.log(res['name']);
+					//	console.log(res['location']['address']);
+					//	// res['location']['city']
+					//	// res['location']['city_id']
+					//	// res['location']['latitude']
+					//	// res['location']['country_id']
+					//	// res['locality']['zipcode']
+					//	console.log(res['cuisines']);
+					//	console.log(res['currency'] + res['average_cost_for_two'] + ' (' + res['price_range'] + ')');
+					//	console.log(res['offers']);
+					//	console.log(res['user_rating']['aggregate_rating']);
+					//	console.log(res['menu_url']);
+					//	console.log(res['has_online_delivery']);
+					//	console.log(res['is_delivering_now']);
+					//	console.log(res['order_url']);
+					//	console.log(res['has_table_booking']);
+					//	console.log(res['events_url']);
+					//	console.log(res['establishment_types'])
+					//});
 				})
 				.catch((err) => {
 					console.log('Error : ' + err);
@@ -469,7 +489,6 @@ const Restaurant = (key) => ({
 			}
 		});
 	}
-
 });
 
 
@@ -588,11 +607,10 @@ const Custom = (key) => ({
 });
 
 
-//Common('8c566e4798eca2737581bd3c21390711').geocode();
 
 
-Restaurant('8c566e4798eca2737581bd3c21390711').search({ entity_id : '0', entity_type : '', q : '',
+Restaurant('xxx').search({ entity_id : '0', entity_type : '', q : '',
 						start : '', count : '', lat : '28',
 						lon : '77', radius : '50000', cuisines : '', establishment_type : '',
-						collection_id : '', category : '', sort : 'desc', order : '' });
+						collection_id : '', category : '', sort : 'rating', order : 'desc' });
 
