@@ -1,12 +1,45 @@
-
-
 //Node version 6.x or above required
 
 const request = require('request');
 const co = require('co');
 const fs = require('fs');
 
+const Extras = () => ({
+	appendObject: (obj, name) => {
+		//if(name === 'undefined') return;
+		var bool = fs.exists('./JSON/' + name + '.json');
+		if(bool){
+			let p = new Promise((resolve, reject) => {
+				resolve(fs.readFile('./JSON/' + name + '.json'));
+			});
+			p.then( (file) => {
+				return JSON.parse(file);
+			})
+			.then( (json) => {
+				return json.data.push(obj);
+			})
+			.then( (json) => {
+				return JSON.stringify(json);
+			})
+			.then( (write) => {
+				fs.writeFile('./JSON/' + name + '.json', write);
+			});
+			 	
+		}else{
+			let p1 = new Promise((resolve, reject) => {
+				resolve({data:[]}.data.push(obj));
+			});
+			p1.then( (obj) => {
+				return JSON.stringify(obj);
+			})
+			.then( (write) => {
+				fs.writeFile('./JSON/' + name + '.json', write);
+			})
+			
+		}
+	}
 
+})
 
 
 
@@ -451,7 +484,7 @@ const Restaurant = (key) => ({
 						o['name'] = d['name'];
 						//o['establishment_types'] = d['establishment_types'];
 						//console.log(o);
-						
+						Extras().appendObject(o, d['cuisines'].split(', ')[0]); 
 					});
 					//console.log('Results Found: ' + data['results_found']);
 					
@@ -606,10 +639,19 @@ const Custom = (key) => ({
 	}
 });
 
+Common('8c566e4798eca2737581bd3c21390711').cuisines(more = {city_id:'1', lat:'', lon:''}, (err, data) => {
+	data.forEach( (cui, count) => {
+		//console.log(cui);
+		Restaurant('8c566e4798eca2737581bd3c21390711').search({ entity_id : '', entity_type : '', q : '',
+						start : '', count : '', lat : '28.6118815',
+						lon : '77.0345796', radius : '10000', cuisines : cui['cuisine']['cuisine_id'], establishment_type : '',
+						collection_id : '', category : '', sort : 'rating', order : 'desc' });
+	});
+});
 
 
 
-Restaurant('xxx').search({ entity_id : '0', entity_type : '', q : '',
+Restaurant('8c566e4798eca2737581bd3c21390711').search({ entity_id : '0', entity_type : '', q : '',
 						start : '', count : '', lat : '28',
 						lon : '77', radius : '50000', cuisines : '', establishment_type : '',
 						collection_id : '', category : '', sort : 'rating', order : 'desc' });

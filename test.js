@@ -1,6 +1,4 @@
 var pyInt = require('./pythonIntegrate');
-
-
 var one = new pyInt.pythonIntegrate(), 
 two = new pyInt.pythonIntegrate(), 
 three = new pyInt.pythonIntegrate();
