@@ -1,1 +1,6 @@
 node_modules/
+pythonFiles/speech.py
+pythonFiles/__pycache__/
+pythonFiles/*.raw
+*.log
+APIs/JSON/*.json

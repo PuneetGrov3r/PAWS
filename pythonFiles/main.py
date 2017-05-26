@@ -1,13 +1,7 @@
 from nltk.parse.stanford import StanfordDependencyParser
 from nltk.corpus import wordnet
-import nltk
-import json
-import requests
-import time
-import sys
-import os
 from sys import argv
-
+import time
 
 class Parser():
 
@@ -63,8 +57,10 @@ class Synonym():
         for syn in wordnet.synsets(word):
             for l in syn.lemmas():
                 synonyms.append(l.name())
+            break
         return synonyms
 
+"""
 class Tokenizer():
 
     def tokenize(self, sent):
@@ -85,3 +81,4 @@ if __name__ == '__main__':
     elif type == 'n':
         nv = Parser()
         print(nv.extractNV(input))
+"""

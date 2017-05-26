@@ -1,11 +1,9 @@
 var pyInt = require('./pythonIntegrate');
-
-
 var one = new pyInt.pythonIntegrate(), 
 two = new pyInt.pythonIntegrate(), 
 three = new pyInt.pythonIntegrate();
 
-one.parseStanParser("I want to book a flight for tokyo.", (err, data) => {
+one.parseStanParser("They'll be coming tomorrow.", (err, data) => {
 	if(err){
 		console.log(`Error: ${err}`);
 	}else{
@@ -21,7 +19,7 @@ two.synonymParser("holiday", (err, data) => {
 	}
 })
 
-three.parseNV("I want to book a flight for tokyo.", (err, data) => {
+three.parseNV("They'll be coming tomorrow.", (err, data) => {
 	if(err){
 		console.log(`Error: ${err}`);
 	}else{

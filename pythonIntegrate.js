@@ -15,11 +15,11 @@ helperFunctions.prototype.parseTuple = (type, input, callback) => {
     var py = spawn('python3', ['./pythonFiles/main.py', type, input]);
     var str = ''
     py.stdout.on('data', (data) => {
-      str += data;
-      //str = str.toString();
-      str = str.replace(/[()\[\]',]/g, "");
-      str = str.slice(0,-1);
-      str = str.split(" ");
+        str += data;
+        //str = str.toString();
+        str = str.replace(/[()\[\]',]/g, "");
+        str = str.slice(0,-1);
+        str = str.split(" ");  
     });
 
     py.stderr.on('data', (data) => {
