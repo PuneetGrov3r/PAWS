@@ -22,9 +22,12 @@
   },
   "homepage": "https://github.com/PuneetGrov3r/new#readme",
   "dependencies": {
+    "async": "^2.4.1",
     "body-parser": "^1.17.1",
     "express": "^4.15.3",
     "morgan": "^1.8.1",
-    "prettyjson": "^1.2.1"
+    "neo4j": "^2.0.0-RC2",
+    "prettyjson": "^1.2.1",
+    "shortid": "^2.2.8"
   }
 }
