@@ -35,8 +35,6 @@ app.get('/requestMessage',(req,res,next)=>{
 	currentSession.parseMessage(msg,(replyObj)=>{
 		console.log(replyObj)
 		res.end(replyObj)
-
-
 	})
 
 
