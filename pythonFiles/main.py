@@ -2,6 +2,8 @@ from nltk.parse.stanford import StanfordDependencyParser
 from nltk.corpus import wordnet
 from sys import argv
 import time
+import os
+import json
 
 class Parser():
 
@@ -60,7 +62,7 @@ class Synonym():
             break
         return synonyms
 
-"""
+
 class Tokenizer():
 
     def tokenize(self, sent):
@@ -81,4 +83,4 @@ if __name__ == '__main__':
     elif type == 'n':
         nv = Parser()
         print(nv.extractNV(input))
-"""
+
