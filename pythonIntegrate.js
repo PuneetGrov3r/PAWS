@@ -97,4 +97,46 @@ pythonIntegrate.prototype.parseNV = (input, callback) => {
   }
 }
 
-exports.pythonIntegrate = pythonIntegrate;
+pythonIntegrate.prototype.fuzzy = (input, callback) => {
+  //  input = {
+  //            toMatch: ' ',
+  //            matchWith: ['', '', '', '']
+  //
+  try{
+    let p = new Promise((resolve, reject) => {
+      resolve(JSON.stringify(input))
+    }); 
+    p.then( (data) => {
+      //console.log(typeof data)
+      var py = spawn('python3', ['./pythonFiles/main.py', 'f', data]);
+      var str = '';
+      var out = '';
+      py.stdout.on('data', (data) => {
+        str += data;
+        out = JSON.parse(str.slice(0,-1));
+      });
+
+      py.stderr.on('data', (data) => {
+        console.log(`stderr: ${data}`);
+      });
+
+      py.on('close', (code) => {
+        callback(null, out)
+      });
+    })
+    
+  }catch(err){
+    callback(err, null);
+  }
+}
+
+//exports.pythonIntegrate = pythonIntegrate;
+
+var a = new pythonIntegrate();
+
+a.fuzzy(input = {toMatch:'lalalala',matchWith:['abc','def','ghi','jkl','mno','pqr']}, (err, data) => {
+  if(err) throw new Error(err);
+  else{
+    //console.log(data);
+  }
+})

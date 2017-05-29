@@ -3,7 +3,9 @@ from nltk.corpus import wordnet
 from sys import argv
 import time
 import os
+import re
 import json
+from fuzzywuzzy import process
 
 class Parser():
 
@@ -68,6 +70,21 @@ class Tokenizer():
     def tokenize(self, sent):
         return nltk.word_tokenize(sent)
 
+class Fuzz():
+
+    def match(self, input):
+        #print('abc', input)
+        r1 = r'(?<=toMatch) ?: ?["|\'].*?["|\']'
+        r2 = r'(?<=matchWith) ?: ?\[.*?\]'
+        r3 = r'\[ ?["|\'].*? ?["|\']\]'
+        r4 = r'["|\'].*?["|\']'
+        toMatch = re.search(r4, re.search(r1, input).group(0)).group(0)
+        matchWith = re.search(r3, re.search(r2, input).group(0)).group(0)
+        matchWith = re.findall(r4, matchWith);
+        #print(matchWith, toMatch)
+        return process.extract(toMatch, matchWith, limit=2)
+
+
 if __name__ == '__main__':
     
     name, type, input = argv
@@ -83,4 +100,11 @@ if __name__ == '__main__':
     elif type == 'n':
         nv = Parser()
         print(nv.extractNV(input))
+    elif type == 'f':
+        f = Fuzz()
+        #print(type(input))
+        print(f.match(input))
 
+
+#a = Fuzz()
+#a.match("{toMatch:'lalalala',matchWith:['abc','def','ghi','jkl','mno','pqr']}")
