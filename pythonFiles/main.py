@@ -6,6 +6,7 @@ import os
 import re
 import json
 from fuzzywuzzy import process
+import codecs
 
 class Parser():
 
@@ -20,6 +21,8 @@ class Parser():
             return 1
         elif string in ['VB' , 'VBD' , 'VBG' , 'VBN' , 'VBP' , 'VBZ']:
             return 2
+        elif string in ['JJ', 'JJR', 'JJS']:
+            return 3
         else:
             return 0
 
@@ -30,6 +33,9 @@ class Parser():
         elif self.__ifNV(j[1]) == 2:
             if j[0] not in output['Verb']:
                 output['Verb'].append(j[0])
+        elif self.__ifNV(j[1]) == 3:
+            if j[0] not in output['Adjective']:
+                output['Adjective'].append(j[0])
         else:
             if j[0] not in output['Other']:
                 output['Other'].append(j[0])
@@ -45,6 +51,7 @@ class Parser():
         depGraph= self.stanParse(sent)
         output = {'Noun':[],
                   'Verb':[],
+                  'Adjective':[],
                   'Other':[]}
         for data in depGraph:
             self.__check(output, data[0])
@@ -73,18 +80,23 @@ class Tokenizer():
 class Fuzz():
 
     def match(self, input):
-        #print('abc', input)
-        r1 = r'(?<=toMatch) ?: ?["|\'].*?["|\']'
-        r2 = r'(?<=matchWith) ?: ?\[.*?\]'
-        r3 = r'\[ ?["|\'].*? ?["|\']\]'
-        r4 = r'["|\'].*?["|\']'
-        toMatch = re.search(r4, re.search(r1, input).group(0)).group(0)
-        matchWith = re.search(r3, re.search(r2, input).group(0)).group(0)
-        matchWith = re.findall(r4, matchWith);
-        #print(matchWith, toMatch)
+        #print(input, type(input))
+        #input = codecs.decode(input, 'utf-8')
+        r1 = '(?<=toMatch) ?: ?["|\'].*?["|\']'
+        r2 = '(?<=matchWith) ?: ?\[.*?\]'
+        r3 = '\[ ?["|\'].*? ?["|\']\]'
+        r4 = '["|\'].*?["|\']'
+        try:
+            toMatch = re.search(r4, re.search(r1, input).group(0)).group(0)
+            matchWith = re.search(r3, re.search(r2, input).group(0)).group(0)
+            matchWith = re.findall(r4, matchWith);
+            #print(matchWith, toMatch)
+        except AttributeError:
+            toMatch = 'a'
+            matchWith = ['ab', 'bc']
         return process.extract(toMatch, matchWith, limit=2)
 
-
+'''
 if __name__ == '__main__':
     
     name, type, input = argv
@@ -104,7 +116,7 @@ if __name__ == '__main__':
         f = Fuzz()
         #print(type(input))
         print(f.match(input))
+'''
 
-
-#a = Fuzz()
-#a.match("{toMatch:'lalalala',matchWith:['abc','def','ghi','jkl','mno','pqr']}")
+a = Fuzz()
+print(a.match("{toMatch:'lalalala',matchWith:['abc','def','ghi','jkl','mno','pqr']}"))
