@@ -103,7 +103,7 @@ pythonIntegrate.prototype.fuzzy = (input, callback) => {
   //            matchWith: ['', '', '', '']
   //          }
   //
-  callback(err, sim.findBestMatch(input[0], input[1]))
+  callback(null, sim.findBestMatch(input[0], input[1]))
   /*
   try{
     let p = new Promise((resolve, reject) => {
@@ -134,13 +134,4 @@ pythonIntegrate.prototype.fuzzy = (input, callback) => {
   */
 }
 
-//exports.pythonIntegrate = pythonIntegrate;
-
-var a = new pythonIntegrate();
-
-a.fuzzy(input = {toMatch:'lalalala',matchWith:['abc','def','ghi','jkl','mno','pqr']}, (err, data) => {
-  if(err) throw new Error(err);
-  else{
-    console.log(data);
-  }
-})
+exports.pythonIntegrate = pythonIntegrate;

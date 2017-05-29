@@ -2,6 +2,7 @@ var pyInt = require('./pythonIntegrate');
 var one = new pyInt.pythonIntegrate(), 
 two = new pyInt.pythonIntegrate(), 
 three = new pyInt.pythonIntegrate();
+four = new pyInt.pythonIntegrate();
 
 one.parseStanParser("They'll be coming tomorrow.", (err, data) => {
 	if(err){
@@ -25,4 +26,11 @@ three.parseNV("They'll be coming tomorrow.", (err, data) => {
 	}else{
 		console.log(data);
 	}
+})
+
+fourfuzzy(['ef',['abc','def','ghi','jkl','mno','pqr']], (err, data) => {
+  if(err) throw new Error(err);
+  else{
+    console.log(data);
+  }
 })
