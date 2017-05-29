@@ -1,7 +1,7 @@
 const spawn = require('child_process').spawn;
 const exec = require('child_process').exec;
 var async = require('async');
-
+const sim = require('string-similarity');
 
 
 function helperFunctions(){
@@ -103,6 +103,8 @@ pythonIntegrate.prototype.fuzzy = (input, callback) => {
   //            matchWith: ['', '', '', '']
   //          }
   //
+  callback(err, sim.findBestMatch(input[0], input[1]))
+  /*
   try{
     let p = new Promise((resolve, reject) => {
       resolve(JSON.stringify(input))
@@ -129,6 +131,7 @@ pythonIntegrate.prototype.fuzzy = (input, callback) => {
   }catch(err){
     callback(err, null);
   }
+  */
 }
 
 //exports.pythonIntegrate = pythonIntegrate;
