@@ -19,53 +19,186 @@ function session(sessionId,latitude,longitude){
 		"verbs":[],
 		"nouns":[],
 		"processedVerbs":[],
-		"processedNouns":[]
+		"processedNouns":[],
+		"allWords":[],
+		"allSynonyms":[]
 	}
 
 	this.isComplete = false
 	this.currentNode = -1
 	this.currentStage = "rootFinder"
-	this.allSynonyms = []
 		
-	console.log("before init")
-		
-	console.log("After")
+	
 	this.functionList = {
 		"rootFinder" : currentClass.rootFinder,
 		"companyFinder":currentClass.companyFinder
 	}
 		
-	
-
-	this.parseMessage = function(message,callback){
-		console.log("inside parse message")
-
-		nlParser.parseNV(message,(err,data)=>{
-
-			//Assigning the the processed nouns and verbs to the object
-			let dataObj = JSON.parse(data.slice(0,-1))
-			currentClass.words["verbs"] = dataObj["Verb"]
-			currentClass.words["nouns"] = dataObj["Noun"]
-			let currentFunction = this[this.currentStage]
-			currentFunction(currentClass,(neo4jObject,prevCallback)=>{
-
-				//Ughhh
-				if(neo4jObject["callNext"])currentClass[currentClass.currentStage](currentClass,prevCallback)
-				else callback(neo4jObject["msg"])
+	this.companies = []
 
 
 
+	this.parseMessage = function(message,messageType,callback){
 
+		switch (messageType) {
+			case "initialQuery":
+				nlParser.parseNV(message,(err,data)=>{
+
+				//Assigning the the processed nouns and verbs to the object
+				let dataObj = JSON.parse(data.slice(0,-1))
+				currentClass.words["verbs"] = dataObj["Verb"]
+				currentClass.words["nouns"] = dataObj["Noun"]
+				currentClass.words["allWords"] = dataObj["Verb"].concat(dataObj["Noun"])
+				let currentFunction = this[this.currentStage]
 				
+				//Finding all synonyms of verbs and nouns
+				findAllSynonyms(this.words.allWords,(allSynonyms)=>{
+					currentClass.words.allSynonyms = allSynonyms
+
+						currentFunction(currentClass,(neo4jObject,prevCallback)=>{
+
+							if(neo4jObject["callNext"] == true)
+								currentClass[currentClass.currentStage](currentClass,prevCallback)
+							
+							else callback({"message":neo4jObject["message"],type:neo4jObject["type"]})
+
+						});
+					});
+
+				});
+				break
 
 
-			});
+
+			case "companyDisambiguation":
+				console.log("Company disamb")
+				//Check if single word or a sentence
+				let isAWord = message.split(" ").length<=1
+				if(isAWord)
+				{
+					findAllSynonyms([message],(allSynonyms)=>{
+						async.filter(currentClass.companies,(item,cb1)=>{
+							matchSynonyms(allSynonyms,item["keywords"],(didMatch)=>{
+								if(didMatch){
+
+									console.log("did match")
+									console.log(allSynonyms,item["keywords"])
+									cb1(null,true)
+								}
+								else{
+
+									console.log("did not match")
+									console.log(allSynonyms,item["keywords"])
+									cb1(null,false)
+								} 
+							})
+						},(err,resultArray)=>{
+							if(resultArray.length>1){
+								currentClass.companies = resultArray
+								callback({
+									callNext:false,
+									message:companyDisambiguationMessageCreator(currentClass.companies),
+									type:"companyDisambiguation"
+								},callback)
+							}
+							else if(resultArray.length == 1)
+							{
+								currentClass.companies = resultArray
+								currentClass.currentStage = "serviceFinder"
+								callback({
+									callNext:true,
+									message:"companyFound",
+									type:"serviceDisambiguation"
+								},callback)
+							}
+							else
+							{
+								callback({
+									callNext:false,
+									message:companyDisambiguationMessageCreator(currentClass.companies),
+									type:"companyDisambiguation"
+								},callback)
+
+							}
+						})
+					})
+
+				}
+				else
+				{
+					nlParser.parseNV(message,(err,data)=>{
+						let dataObj = JSON.parse(data.slice(0,-1))
+						let allWords =   dataObj["Verb"].concat(dataObj["Noun"])
+				
+						findAllSynonyms(allWords,(allSynonyms)=>{
+							async.filter(currentClass.companies,(item,cb1)=>{
+								matchSynonyms(allSynonyms,item["keywords"],(didMatch)=>{
+									if(didMatch){
+
+										console.log("did match")
+										console.log(allSynonyms,item["keywords"])
+										cb1(null,true)
+									}
+									else{
+
+										console.log("did not match")
+										console.log(allSynonyms,item["keywords"])
+										cb1(null,false)
+									} 
+								})
+							},(err,resultArray)=>{
+								if(resultArray.length>1){
+									currentClass.companies = resultArray
+
+									callback({
+										callNext:false,
+										message:companyDisambiguationMessageCreator(currentClass.companies),
+										type:"companyDisambiguation"
+									},callback)
+								}
+								else if(resultArray.length == 1)
+								{
+									currentClass.companies = resultArray
+									currentClass.currentStage = "serviceFinder"
+									callback({
+										callNext:true,
+										message:"companyFound",
+										type:"serviceDisambiguation"
+									},callback)
+								}
+								else
+								{
+									callback({
+										callNext:false,
+										message:companyDisambiguationMessageCreator(currentClass.companies),
+										type:"companyDisambiguation"
+									},callback)
+
+								}
+							})
+						})
+					})
+
+				}
 
 
-		});
+
+				break
+
+			case "serviceDisambiguation":
+				console.log("inside service disamb")
+				callback({callNext:false,message:"done",type:"serviceDisambiguation"},callback)
+				break
+
+			case "parameterFilling":
+				break
+
+		}
+
 
 		
-		console.log("See here")
+
+		
 		
 	}
 
@@ -77,15 +210,15 @@ function session(sessionId,latitude,longitude){
 	this.rootFinder = function(currentClass,callback){
 
 		currentClass.dbDriver.getRootProperties((rootProperties)=>{
-			console.log("root properties")
-			console.log(rootProperties)
-			matchSynonyms(currentClass,rootProperties,currentClass.words["verbs"].concat(currentClass.words["nouns"]),(didMatch,matchedVerb)=>{
+			matchSynonyms(currentClass.words.allSynonyms,rootProperties,(didMatch)=>{
+				console.log("inside rootFinder")
+				console.log(currentClass.words.allSynonyms)
 				if(didMatch)
 				{	
 					currentClass.currentStage = "companyFinder"
-					callback({callNext:true,msg:"Matched"},callback)
+					callback({callNext:true,message:"Matched"},callback)
 				}
-				else callback({callNext:false,msg:"NOMatch"},callback)
+				else callback({callNext:false,message:"NOMatch"},callback)
 			})
 		})
 	}
@@ -93,78 +226,69 @@ function session(sessionId,latitude,longitude){
 	this.companyFinder = function(currentClass,callback){
 		currentClass.dbDriver.getLevel1Keywords((arrayOfObjects)=>{
 			
-			console.log(arrayOfObjects)
 
 			async.filter(arrayOfObjects,(item,cb1)=>{
-				console.log("allSynonyms1")
 
-				console.log(currentClass.allSynonyms)
-
-			/*	if(currentClass.allSynonyms.length!=0)
-				{
-					console.log("allSynonyms")
-					console.log(currentClass.allSynonyms)
-					let keywords = item["keywords"].split(':')
-					let ifFound = false
-					for(i in keywords)
+			
+				matchSynonyms(currentClass.words.allSynonyms,item["keywords"],(didMatch)=>{
+					if(didMatch)
 					{
-						for(j in currentClass.allSynonyms)
-						{
-							if(keywords[i] == currentClass.allSynonyms[j])
-							{
-								ifFound = true
-								cb1(null,true)
-								break
-							}
-							if(ifFound)break
-						}
+						cb1(null,true)
 					}
-					if(!ifFound)cb1(null,false)
-				}
-				*/
-				//else{
-					matchSynonyms(currentClass,item["keywords"],currentClass.words["verbs"].concat(currentClass.words["nouns"]),(didMatch,matchedVerb)=>{
-						if(didMatch)
-						{
-							console.log("Matched")
-							console.log(item["keywords"])
-							cb1(null,true)
-						}
-						else
-						{
-							cb1(null,false)
-						}
-
-					});
-				//}
+					else
+					{
+						cb1(null,false)
+					}
+				});
+			
 			},(err,results)=>{
-				console.log("Conpany results")
-				console.log(results)
 				if(results.length == 0)
-					callback({callNext:false,msg:"No company found"},callback)
-				else
+					callback({callNext:false,message:"No service found",type:"initialQuery"},callback)
+
+				else if(results.length > 1)
 				{
-					let resultString = []
 					async.each(results,(item,cb1)=>{
-						resultString.push(item["company"])
+						currentClass.companies.push({
+							"id":item["id"],
+							"company":item["company"],
+							"function":item["function"],
+							"keywords":item["keywords"]
+						})
 						cb1(null)
 					},(err)=>{
-						callback({callNext:false,msg:resultString.join()},callback)
-					});
-					
-					
+
+						callback({
+							callNext:false,
+							message:companyDisambiguationMessageCreator(currentClass.companies),
+							type:"companyDisambiguation"
+						},callback)
+					});	
 				}
 
-
+				else
+				{
+					currentClass.currentStage = "serviceFinder"
+					currentClass.companies.push({
+							"id":results[0]["id"],
+							"company":results[0]["company"],
+							"function":results[0]["function"],
+							"keywords":results[0]["keywords"]
+					})
+					callback({callNext:true,message:"Comapny Found",type:"serviceDisambiguation"},callback)
+				}
 			})
 
-
-
-
-
-
-
 		})
+
+	}
+
+
+	this.serviceFinder = function(currentClass,callback)
+	{
+
+
+		console.log("inside serviceFinder")
+		callback({callNext:false,message:"Service Found",type:"serviceDisambiguation"},callback)
 
 
 
@@ -175,48 +299,64 @@ function session(sessionId,latitude,longitude){
 
 
 //Send true or false in callback
-function matchSynonyms(currentClass,keywords,verbs,callback)
+function matchSynonyms(synonymArray,keywords,callback)
 {
-	console.log("MAtching now for",keywords)
 	let keywordArray = keywords.split(":")
-	async.detect(verbs,(item,cb1)=>{
-		nlParser.synonymParser(item,(err,synonymArray)=>{
-			console.log(synonymArray)
-			currentClass.allSynonyms.concat(synonymArray)
-			if(err)cb1(null,false)
-			let ifFound = false
-			for(i = 0;i<synonymArray.length ;i++)
+
+	let ifFound = false
+
+	for(i = 0;i<synonymArray.length ;i++)
+	{
+		for(j = 0;j<keywordArray.length;j++)
+		{
+			if(synonymArray[i] == keywordArray[j])
 			{
-				for(j = 0;j<keywordArray.length;j++)
-				{
-					if(synonymArray[i] == keywordArray[j])
-					{
-						ifFound = true
-						cb1(null,true)
-						break
+				ifFound = true
+				callback(true)
+				break
 
-					}
-					if(ifFound)break
-				}
 			}
-			if(!ifFound)cb1(null,false)
-
-
-		});
-
-	},(err,result)=>{
-		console.log("Verb match ",result)
-		if(result){
-			callback(true,result)
+			if(ifFound)break
 		}
-		else{
-			callback(false,undefined)
+	}
+	if(!ifFound)callback(false)
+
+}
+
+
+
+function findAllSynonyms(allWords,callback){
+	async.concat(allWords,(item,cb1)=>{
+		nlParser.synonymParser(item,(err,arrayOfSynonyms)=>{
+			cb1(null,arrayOfSynonyms)
+		});
+	},(err,results)=>{
+		if(err) console.log(err)
+		else 
+		{
+			callback(results)
 		}
 	})
 
 }
 
 
+
+function companyDisambiguationMessageCreator(companies){
+	let arrayLength = companies.length
+	let initString = "Is your query related to "
+	initString = initString + companies[0]["function"]
+	for (i = 1; i<companies.length-1;i++)
+	{
+		initString = initString +", "+ companies[i]["function"] 
+	}
+	initString = initString +" or "+ companies[arrayLength-1]["function"] +"?"
+
+	return initString
+
+
+
+}
 
 
 

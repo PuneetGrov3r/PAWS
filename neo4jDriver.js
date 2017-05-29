@@ -46,9 +46,10 @@ class Driver {
 		        	let tempObj = {}
 		        	tempObj["keywords"] = results[i]["a"]["properties"]["keywords"]
 		        	tempObj["company"] = results[i]["a"]["properties"]["company"]
+		        	tempObj["id"] = results[i]["a"]["_id"]
+		        	tempObj["function"]= results[i]["a"]["properties"]["function"]
 		        	returnArray.push(tempObj)
 		        }
-		        console.log(returnArray)
 		        callback(returnArray)
 		    }
 		});
