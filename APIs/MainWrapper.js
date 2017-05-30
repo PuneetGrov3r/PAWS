@@ -1,6 +1,7 @@
 const f2f = require('./Food2ForkWrapper.js');
 const ow = require('./OpenWeatherWrapper.js');
-const mp = require('./MapsAPIWrapper.js')
+const mp = require('./MapsAPIWrapper.js');
+const wk = require('./WikiWrapper.js');
 
 exports.food2fork = {
 	"search": f2f('xxx').search(),
@@ -16,4 +17,11 @@ exports.maps = {
 exports.weather = {
 	"current": ow('xxx').currentWeather(),
 	"forecast": ow('xxx').forecast()
+}
+
+exports.wiki = {
+	"defination": wk().getDefination(),
+	"url": wk().getURL(),
+	"locality": wk().getLocality(),
+	"summary": wk().getSummary()
 }

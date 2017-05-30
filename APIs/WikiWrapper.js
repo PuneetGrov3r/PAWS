@@ -19,7 +19,8 @@ const Wiki = () => ({
 					resolve(JSON.parse(body)['query']['pages']);
 				});
 				p.then( (data) => {
-					callback(null, [ data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""), Wiki().getURL(Object.keys(data)[0], callback) ][0]);	// Yeah!
+					//Wiki().getURL(Object.keys(data)[0], callback)
+					callback(null, data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));	// Yeah!
 				})
 				.catch( (error) => {
 					callback(err, null);
@@ -77,7 +78,7 @@ const Wiki = () => ({
 		});
 	},
 
-	getURL: (id, callback) => {
+	getURL: (title, callback) => {
 		let state = {
 			method: 'GET',
 			url: 'https://en.wikipedia.org/w/api.php',
@@ -85,24 +86,50 @@ const Wiki = () => ({
 				'Api-User-Agent': 'Example/1.0',
 			}
 		}
-		state.url += '?action=query&format=json&prop=info&inprop=url';
-		state.url += '&pageids=' + id;
-		
-		req(state, (er, re, b) => {
-			if(!er && re.statusCode === 200){
-				let p1 = new Promise((resolve, reject) => {
-					resolve(JSON.parse(b));
+		state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';  
+		state.url += '&titles=' + title;
+		req(state, (err, res, body) => {
+			if(!err && res.statusCode === 200){
+				let p = new Promise((resolve, reject) => {
+					resolve(JSON.parse(body)['query']['pages']);
 				});
-				p1.then( (parsed) => {
-					parsed = parsed['query']['pages'];
-					parsed = parsed[Object.keys(parsed)[0]];
-					callback(null, parsed['fullurl']);
+				p.then( (data) => {
+					var id = Object.keys(data)[0]
+					let state = {
+						method: 'GET',
+						url: 'https://en.wikipedia.org/w/api.php',
+						headers: {
+							'Api-User-Agent': 'Example/1.0',
+						}
+					}
+					state.url += '?action=query&format=json&prop=info&inprop=url';
+					state.url += '&pageids=' + id;
+					
+					req(state, (er, re, b) => {
+						if(!er && re.statusCode === 200){
+							let p1 = new Promise((resolve, reject) => {
+								resolve(JSON.parse(b));
+							});
+							p1.then( (parsed) => {
+								parsed = parsed['query']['pages'];
+								parsed = parsed[Object.keys(parsed)[0]];
+								callback(null, parsed['fullurl']);
+							})
+							.catch( (err) => {
+								callback(err, null);
+							})
+						}
+					});
+
 				})
-				.catch( (err) => {
+				.catch( (error) => {
 					callback(err, null);
-				})
+				});
 			}
-		});
+			else if(err){
+				console.log(err, null);
+			}
+		})
 	},
 
 	getDefination: (word, callback) => {
@@ -148,7 +175,7 @@ const Wiki = () => ({
 });
 
 
-exports.Wiki = Wiki
+module.exports = Wiki
 /*
 
 Wiki().getDefination('cool', (err, data) => {
@@ -157,4 +184,9 @@ Wiki().getDefination('cool', (err, data) => {
 		return;
 	}
 	console.log(data);
-});*/
+});
+Wiki().getURL('Mahatma Gandhi', (err, data) => {
+	console.log(data)
+})
+
+*/
