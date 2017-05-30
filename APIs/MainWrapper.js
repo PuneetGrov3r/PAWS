@@ -7,7 +7,7 @@ const mrk = require('./MarkitAPIWrapper.js');
 exports.food2fork = {
 	"search": f2f('xxx').search(),
 	"recipe": f2f('xxx').recipe(),
-	"searchNRecipe": f2f('xxx').searchNRecipe()
+	"searchNRecipe": f2f('xxx').searchNRecipe() // Source URL Imp., contains how to make...
 }
 
 exports.maps = {
