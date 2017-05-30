@@ -54,4 +54,4 @@ const Weather = (key) => ({
 })
 exports.Weather = Weather
 
-//Weather('fd69a8bec4fb9cd33f7a1cf60f4871eb').forecast();
+//Weather('xxx').forecast();

@@ -28,7 +28,7 @@ three.parseNV("I need a definition", (err, data) => {
 	}
 })
 
-fourfuzzy(['ef',['abc','def','ghi','jkl','mno','pqr']], (err, data) => {
+four.fuzzy(['ef',['abc','def','ghi','jkl','mno','pqr']], (err, data) => {
   if(err) throw new Error(err);
   else{
     console.log(data);

@@ -639,10 +639,13 @@ const Custom = (key) => ({
 	}
 });
 
-Common('8c566e4798eca2737581bd3c21390711').cuisines(more = {city_id:'1', lat:'', lon:''}, (err, data) => {
+
+
+/*
+Common('xxx').cuisines(more = {city_id:'1', lat:'', lon:''}, (err, data) => {
 	data.forEach( (cui, count) => {
 		//console.log(cui);
-		Restaurant('8c566e4798eca2737581bd3c21390711').search({ entity_id : '', entity_type : '', q : '',
+		Restaurant('xxx').search({ entity_id : '', entity_type : '', q : '',
 						start : '', count : '', lat : '28.6118815',
 						lon : '77.0345796', radius : '10000', cuisines : cui['cuisine']['cuisine_id'], establishment_type : '',
 						collection_id : '', category : '', sort : 'rating', order : 'desc' });
@@ -651,8 +654,9 @@ Common('8c566e4798eca2737581bd3c21390711').cuisines(more = {city_id:'1', lat:'',
 
 
 
-Restaurant('8c566e4798eca2737581bd3c21390711').search({ entity_id : '0', entity_type : '', q : '',
+Restaurant('xxx').search({ entity_id : '0', entity_type : '', q : '',
 						start : '', count : '', lat : '28',
 						lon : '77', radius : '50000', cuisines : '', establishment_type : '',
 						collection_id : '', category : '', sort : 'rating', order : 'desc' });
 
+*/

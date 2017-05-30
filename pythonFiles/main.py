@@ -77,26 +77,8 @@ class Tokenizer():
     def tokenize(self, sent):
         return nltk.word_tokenize(sent)
 
-class Fuzz():
 
-    def match(self, input):
-        #print(input, type(input))
-        #input = codecs.decode(input, 'utf-8')
-        r1 = '(?<=toMatch) ?: ?["|\'].*?["|\']'
-        r2 = '(?<=matchWith) ?: ?\[.*?\]'
-        r3 = '\[ ?["|\'].*? ?["|\']\]'
-        r4 = '["|\'].*?["|\']'
-        try:
-            toMatch = re.search(r4, re.search(r1, input).group(0)).group(0)
-            matchWith = re.search(r3, re.search(r2, input).group(0)).group(0)
-            matchWith = re.findall(r4, matchWith);
-            #print(matchWith, toMatch)
-        except AttributeError:
-            toMatch = 'a'
-            matchWith = ['ab', 'bc']
-        return process.extract(toMatch, matchWith, limit=2)
 
-'''
 if __name__ == '__main__':
     
     name, type, input = argv
@@ -112,11 +94,4 @@ if __name__ == '__main__':
     elif type == 'n':
         nv = Parser()
         print(nv.extractNV(input))
-    elif type == 'f':
-        f = Fuzz()
-        #print(type(input))
-        print(f.match(input))
-'''
 
-a = Fuzz()
-print(a.match("{toMatch:'lalalala',matchWith:['abc','def','ghi','jkl','mno','pqr']}"))

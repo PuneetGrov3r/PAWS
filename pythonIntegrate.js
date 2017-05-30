@@ -98,40 +98,10 @@ pythonIntegrate.prototype.parseNV = (input, callback) => {
 }
 
 pythonIntegrate.prototype.fuzzy = (input, callback) => {
-  //  input = {
-  //            toMatch: ' ',
-  //            matchWith: ['', '', '', '']
-  //          }
+  //  input = [' ', ['', '', '', ''] ]
+  //          toMatch   matchWith
   //
   callback(null, sim.findBestMatch(input[0], input[1]))
-  /*
-  try{
-    let p = new Promise((resolve, reject) => {
-      resolve(JSON.stringify(input))
-    }); 
-    p.then( (data) => {
-      console.log(data)
-      var py = spawn('python3', ['./pythonFiles/main.py', 'f', data]);
-      var str = '';
-      var out = '';
-      py.stdout.on('data', (data) => {
-        str += data;
-        out = str.slice(0,-1).replace(/[()\[\]"']/g, "").split(", ");
-      });
-
-      py.stderr.on('data', (data) => {
-        console.log(`stderr: ${data}`);
-      });
-
-      py.on('close', (code) => {
-        callback(null, out)
-      });
-    })
-    
-  }catch(err){
-    callback(err, null);
-  }
-  */
 }
 
 exports.pythonIntegrate = pythonIntegrate;
