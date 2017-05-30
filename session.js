@@ -39,7 +39,7 @@ function session(sessionId,latitude,longitude){
 
 
 	this.parseMessage = function(message,messageType,callback){
-
+		this.mainCallback = callback
 		switch (messageType) {
 			case "initialQuery":
 				nlParser.parseNV(message,(err,data)=>{
@@ -56,7 +56,7 @@ function session(sessionId,latitude,longitude){
 					currentClass.words.allSynonyms = allSynonyms
 
 						currentFunction(currentClass,(neo4jObject,prevCallback)=>{
-
+							currentClass.prevCallback = prevCallback
 							if(neo4jObject["callNext"] == true)
 								currentClass[currentClass.currentStage](currentClass,prevCallback)
 							
@@ -105,11 +105,8 @@ function session(sessionId,latitude,longitude){
 							{
 								currentClass.companies = resultArray
 								currentClass.currentStage = "serviceFinder"
-								callback({
-									callNext:true,
-									message:"companyFound",
-									type:"serviceDisambiguation"
-								},callback)
+								currentClass["serviceFinder"](currentClass,currentClass.prevCallback)
+
 							}
 							else
 							{
@@ -160,11 +157,7 @@ function session(sessionId,latitude,longitude){
 								{
 									currentClass.companies = resultArray
 									currentClass.currentStage = "serviceFinder"
-									callback({
-										callNext:true,
-										message:"companyFound",
-										type:"serviceDisambiguation"
-									},callback)
+									currentClass["serviceFinder"](currentClass,currentClass.prevCallback)
 								}
 								else
 								{
@@ -218,7 +211,7 @@ function session(sessionId,latitude,longitude){
 					currentClass.currentStage = "companyFinder"
 					callback({callNext:true,message:"Matched"},callback)
 				}
-				else callback({callNext:false,message:"NOMatch"},callback)
+				else callback({callNext:false,message:"Sorry we are unable to locate any appropriate service at this moment",type:"initialQuery"},callback)
 			})
 		})
 	}
@@ -288,11 +281,80 @@ function session(sessionId,latitude,longitude){
 
 
 		console.log("inside serviceFinder")
-		callback({callNext:false,message:"Service Found",type:"serviceDisambiguation"},callback)
+		//currentClass.mainCallback({callNext:false,message:currentClass.companies[0]["company"],type:"serviceDisambiguation"},callback)
+		let companyName = currentClass.companies[0]["company"]
+		currentClass.dbDriver.getLevel2Keywords(companyName,(arrayOfNodes)=>{
 
+			console.log(arrayOfNodes)
+			if(arrayOfNodes.length == 1)
+			{
+				currentClass.Services = [arrayOfNodes[0]]
+				callback({callNext:true,message:"Service Found",type:"parameterFilling"},callback)
+			}
+
+
+			//If more than one node
+			else {
+				async.filter(arrayOfNodes,(item,cb1)=>{
+
+			
+				matchSynonyms(currentClass.words.allSynonyms,item["keywords"],(didMatch)=>{
+					if(didMatch)
+					{
+						cb1(null,true)
+					}
+					else
+					{
+						cb1(null,false)
+					}
+				});
+			
+			},(err,results)=>{
+
+				if(results.length == 0){
+					currentClass.currentService = arrayOfNodes
+					callback({callNext:false,
+						message:serviceDisambiguationMessageCreator(currentClass),
+						type:"serviceDisambiguation"},callback)
+				}
+
+				else if(results.length > 1)
+				{
+					currentService = results
+					callback({callNext:false,
+						message:serviceDisambiguationMessageCreator(currentClass),
+						type:"serviceDisambiguation"},callback	)
+				}
+
+				else
+				{
+					currentClass.currentStage = "parameterFilling"
+					currentClass.companies.push({
+							"id":results[0]["id"],
+							"company":results[0]["company"],
+							"function":results[0]["function"],
+							"keywords":results[0]["keywords"]
+					})
+					callback({callNext:true,message:"Company Found",type:"serviceDisambiguation"},callback)
+				}
+			})
+
+
+			}
+
+
+
+
+
+		});
+
+
+
+		
 
 
 	}
+
 
 
 }
@@ -358,6 +420,9 @@ function companyDisambiguationMessageCreator(companies){
 
 }
 
-
+function serviceDisambiguationMessageCreator(currentClass)
+{
+	return currentClass.companies[0]["company"]
+}
 
 module.exports = session

@@ -20,7 +20,7 @@ two.synonymParser("holiday", (err, data) => {
 	}
 })
 
-three.parseNV("They'll be coming tomorrow.", (err, data) => {
+three.parseNV("I need a definition", (err, data) => {
 	if(err){
 		console.log(`Error: ${err}`);
 	}else{
