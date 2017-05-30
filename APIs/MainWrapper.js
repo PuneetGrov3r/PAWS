@@ -2,6 +2,7 @@ const f2f = require('./Food2ForkWrapper.js');
 const ow = require('./OpenWeatherWrapper.js');
 const mp = require('./MapsAPIWrapper.js');
 const wk = require('./WikiWrapper.js');
+const mrk = require('./MarkitAPIWrapper.js');
 
 exports.food2fork = {
 	"search": f2f('xxx').search(),
@@ -24,4 +25,10 @@ exports.wiki = {
 	"url": wk().getURL(),
 	"locality": wk().getLocality(),
 	"summary": wk().getSummary()
+}
+
+exports.markit = {
+	"lookup": mrk().lookup(),
+	"price": mrk().price(),
+	"lookupNPrice": mrk().lookupNPrice()
 }
