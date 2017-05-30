@@ -634,14 +634,13 @@ const Location = (state) => ({
 
 
 const Custom = (key) => ({
-
 	fetchByRestName: (name, callback) => {
 	}
 });
 
 
 
-/*
+
 Common('xxx').cuisines(more = {city_id:'1', lat:'', lon:''}, (err, data) => {
 	data.forEach( (cui, count) => {
 		//console.log(cui);
@@ -652,7 +651,7 @@ Common('xxx').cuisines(more = {city_id:'1', lat:'', lon:''}, (err, data) => {
 	});
 });
 
-
+/*
 
 Restaurant('xxx').search({ entity_id : '0', entity_type : '', q : '',
 						start : '', count : '', lat : '28',
