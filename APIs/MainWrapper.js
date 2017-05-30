@@ -16,8 +16,8 @@ exports.maps = {
 }
 
 exports.weather = {
-	"current": ow('xxx').currentWeather(),
-	"forecast": ow('xxx').forecast()
+	"current": ow('fd69a8bec4fb9cd33f7a1cf60f4871eb').currentWeather,
+	"forecast": ow('fd69a8bec4fb9cd33f7a1cf60f4871eb').forecast
 }
 
 exports.wiki = {

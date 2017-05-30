@@ -3,7 +3,7 @@ let pyInt = require("./pythonIntegrate")
 let neo4jDriver = require('./neo4jDriver.js')
 
 let nlParser = new pyInt.pythonIntegrate()
-
+let paramDescription = require('./paramDescriptions.js')
 
 
 function session(sessionId,latitude,longitude){
@@ -18,6 +18,7 @@ function session(sessionId,latitude,longitude){
 	this.words = {
 		"verbs":[],
 		"nouns":[],
+		"adjectives":[],
 		"processedVerbs":[],
 		"processedNouns":[],
 		"allWords":[],
@@ -36,6 +37,17 @@ function session(sessionId,latitude,longitude){
 		
 	this.companies = []
 
+	this.Services = []
+
+	this.paramRequired = {}
+	this.parameterBringFilled = {}
+
+
+	this.currentFillingParameter = ""
+
+
+
+
 
 
 	this.parseMessage = function(message,messageType,callback){
@@ -48,7 +60,9 @@ function session(sessionId,latitude,longitude){
 				let dataObj = JSON.parse(data.slice(0,-1))
 				currentClass.words["verbs"] = dataObj["Verb"]
 				currentClass.words["nouns"] = dataObj["Noun"]
-				currentClass.words["allWords"] = dataObj["Verb"].concat(dataObj["Noun"])
+				currentClass.words["adjectives"] = dataObj["Adjective"]
+
+				currentClass.words["allWords"] = dataObj["Verb"].concat(dataObj["Noun"]).concat(dataObj["Adjective"])
 				let currentFunction = this[this.currentStage]
 				
 				//Finding all synonyms of verbs and nouns
@@ -73,6 +87,12 @@ function session(sessionId,latitude,longitude){
 			case "companyDisambiguation":
 				console.log("Company disamb")
 				//Check if single word or a sentence
+				fuzzyCheckOptions(currentClass["companies"],message,"function",(isPresent,matchedObject)=>{
+					console.log("isPresent", isPresent,matchedObject)
+				})
+
+
+
 				let isAWord = message.split(" ").length<=1
 				if(isAWord)
 				{
@@ -95,7 +115,7 @@ function session(sessionId,latitude,longitude){
 						},(err,resultArray)=>{
 							if(resultArray.length>1){
 								currentClass.companies = resultArray
-								callback({
+								currentClass.mainCallback({
 									callNext:false,
 									message:companyDisambiguationMessageCreator(currentClass.companies),
 									type:"companyDisambiguation"
@@ -110,7 +130,7 @@ function session(sessionId,latitude,longitude){
 							}
 							else
 							{
-								callback({
+								currentClass.mainCallback({
 									callNext:false,
 									message:companyDisambiguationMessageCreator(currentClass.companies),
 									type:"companyDisambiguation"
@@ -125,9 +145,10 @@ function session(sessionId,latitude,longitude){
 				{
 					nlParser.parseNV(message,(err,data)=>{
 						let dataObj = JSON.parse(data.slice(0,-1))
-						let allWords =   dataObj["Verb"].concat(dataObj["Noun"])
-				
+						let allWords =   dataObj["Verb"].concat(dataObj["Noun"]).concat(dataObj["Adjective"])
+						
 						findAllSynonyms(allWords,(allSynonyms)=>{
+							currentClass.nextStageSynonyms  = allSynonyms
 							async.filter(currentClass.companies,(item,cb1)=>{
 								matchSynonyms(allSynonyms,item["keywords"],(didMatch)=>{
 									if(didMatch){
@@ -147,7 +168,7 @@ function session(sessionId,latitude,longitude){
 								if(resultArray.length>1){
 									currentClass.companies = resultArray
 
-									callback({
+									currentClass.mainCallback({
 										callNext:false,
 										message:companyDisambiguationMessageCreator(currentClass.companies),
 										type:"companyDisambiguation"
@@ -161,7 +182,7 @@ function session(sessionId,latitude,longitude){
 								}
 								else
 								{
-									callback({
+									currentClass.mainCallback({
 										callNext:false,
 										message:companyDisambiguationMessageCreator(currentClass.companies),
 										type:"companyDisambiguation"
@@ -180,7 +201,111 @@ function session(sessionId,latitude,longitude){
 
 			case "serviceDisambiguation":
 				console.log("inside service disamb")
-				callback({callNext:false,message:"done",type:"serviceDisambiguation"},callback)
+				
+				
+				let isWord = message.split(" ").length<=1
+				if(isWord)
+				{
+					findAllSynonyms([message],(allSynonyms)=>{
+						async.filter(currentClass.Services,(item,cb1)=>{
+							matchSynonyms(allSynonyms,item["keywords"],(didMatch)=>{
+								if(didMatch){
+
+									console.log("did match")
+									console.log(allSynonyms,item["keywords"])
+									cb1(null,true)
+								}
+								else{
+
+									console.log("did not match")
+									console.log(allSynonyms,item["keywords"])
+									cb1(null,false)
+								} 
+							})
+						},(err,resultArray)=>{
+							if(resultArray.length>1){
+								currentClass.Services = resultArray
+								currentClass.mainCallback({
+									callNext:false,
+									message:serviceDisambiguationMessageCreator(currentClass.Services),
+									type:"serviceDisambiguation"
+								},callback)
+							}
+							else if(resultArray.length == 1)
+							{
+								currentClass.Services = resultArray
+								currentClass.currentStage = "parameterFilling"
+								currentClass["parameterFilling"](currentClass,currentClass.prevCallback)
+
+							}
+							else
+							{
+								currentClass.mainCallback({
+									callNext:false,
+									message:serviceDisambiguationMessageCreator(currentClass.Services),
+									type:"serviceDisambiguation"
+								},callback)
+
+							}
+						})
+					})
+
+				}
+				else
+				{
+					nlParser.parseNV(message,(err,data)=>{
+						let dataObj = JSON.parse(data.slice(0,-1))
+						let allWords =   dataObj["Verb"].concat(dataObj["Noun"]).concat(dataObj["Adjective"])
+						
+						findAllSynonyms(allWords,(allSynonyms)=>{
+							currentClass.nextStageSynonyms  = allSynonyms
+							async.filter(currentClass.Services,(item,cb1)=>{
+								matchSynonyms(allSynonyms,item["keywords"],(didMatch)=>{
+									if(didMatch){
+
+										console.log("did match")
+										console.log(allSynonyms,item["keywords"])
+										cb1(null,true)
+									}
+									else{
+
+										console.log("did not match")
+										console.log(allSynonyms,item["keywords"])
+										cb1(null,false)
+									} 
+								})
+							},(err,resultArray)=>{
+								if(resultArray.length>1){
+									currentClass.Services = resultArray
+
+									currentClass.mainCallback({
+										callNext:false,
+										message:serviceDisambiguationMessageCreator(currentClass.Services),
+										type:"serviceDisambiguation"
+									},callback)								}
+								else if(resultArray.length == 1)
+								{
+									currentClass.Services = resultArray
+									currentClass.currentStage = "parameterFilling"
+									currentClass["parameterFilling"](currentClass,currentClass.prevCallback)
+								}
+								else
+								{
+									currentClass.mainCallback({
+										callNext:false,
+										message:serviceDisambiguationMessageCreator(currentClass.Services),
+										type:"serviceDisambiguation"
+									},callback)
+
+								}
+							})
+						})
+					})
+
+				}
+
+
+
 				break
 
 			case "parameterFilling":
@@ -211,18 +336,14 @@ function session(sessionId,latitude,longitude){
 					currentClass.currentStage = "companyFinder"
 					callback({callNext:true,message:"Matched"},callback)
 				}
-				else callback({callNext:false,message:"Sorry we are unable to locate any appropriate service at this moment",type:"initialQuery"},callback)
+				else currentClass.mainCallback({callNext:false,message:"Sorry we are unable to locate any appropriate service at this moment",type:"initialQuery"},callback)
 			})
 		})
 	}
 	
 	this.companyFinder = function(currentClass,callback){
 		currentClass.dbDriver.getLevel1Keywords((arrayOfObjects)=>{
-			
-
 			async.filter(arrayOfObjects,(item,cb1)=>{
-
-			
 				matchSynonyms(currentClass.words.allSynonyms,item["keywords"],(didMatch)=>{
 					if(didMatch)
 					{
@@ -236,7 +357,7 @@ function session(sessionId,latitude,longitude){
 			
 			},(err,results)=>{
 				if(results.length == 0)
-					callback({callNext:false,message:"No service found",type:"initialQuery"},callback)
+					currentClass.mainCallback({callNext:false,message:"No service found",type:"initialQuery"},callback)
 
 				else if(results.length > 1)
 				{
@@ -250,7 +371,7 @@ function session(sessionId,latitude,longitude){
 						cb1(null)
 					},(err)=>{
 
-						callback({
+						currentClass.mainCallback({
 							callNext:false,
 							message:companyDisambiguationMessageCreator(currentClass.companies),
 							type:"companyDisambiguation"
@@ -267,7 +388,7 @@ function session(sessionId,latitude,longitude){
 							"function":results[0]["function"],
 							"keywords":results[0]["keywords"]
 					})
-					callback({callNext:true,message:"Comapny Found",type:"serviceDisambiguation"},callback)
+					currentClass["serviceFinder"](currentClass,currentClass.prevCallback)
 				}
 			})
 
@@ -276,16 +397,21 @@ function session(sessionId,latitude,longitude){
 	}
 
 
+
+
+
+
 	this.serviceFinder = function(currentClass,callback)
 	{
 
 
 		console.log("inside serviceFinder")
-		//currentClass.mainCallback({callNext:false,message:currentClass.companies[0]["company"],type:"serviceDisambiguation"},callback)
 		let companyName = currentClass.companies[0]["company"]
 		currentClass.dbDriver.getLevel2Keywords(companyName,(arrayOfNodes)=>{
 
 			console.log(arrayOfNodes)
+			
+			//Incase a company has only one service
 			if(arrayOfNodes.length == 1)
 			{
 				currentClass.Services = [arrayOfNodes[0]]
@@ -295,10 +421,11 @@ function session(sessionId,latitude,longitude){
 
 			//If more than one node
 			else {
+
+				currentClass.Services = arrayOfNodes
 				async.filter(arrayOfNodes,(item,cb1)=>{
 
-			
-				matchSynonyms(currentClass.words.allSynonyms,item["keywords"],(didMatch)=>{
+				matchSynonyms(currentClass.words.allSynonyms.concat(currentClass.nextStageSynonyms),item["keywords"],(didMatch)=>{
 					if(didMatch)
 					{
 						cb1(null,true)
@@ -313,29 +440,31 @@ function session(sessionId,latitude,longitude){
 
 				if(results.length == 0){
 					currentClass.currentService = arrayOfNodes
-					callback({callNext:false,
-						message:serviceDisambiguationMessageCreator(currentClass),
-						type:"serviceDisambiguation"},callback)
+					currentClass.mainCallback({callNext:false,
+						message:serviceDisambiguationMessageCreator(currentClass.Services),
+						type:"serviceDisambiguation"})
 				}
 
 				else if(results.length > 1)
 				{
+					console.log("this is called once")
 					currentService = results
-					callback({callNext:false,
-						message:serviceDisambiguationMessageCreator(currentClass),
-						type:"serviceDisambiguation"},callback	)
+					currentClass.mainCallback({callNext:false,
+						message:serviceDisambiguationMessageCreator(currentClass.Services),
+						type:"serviceDisambiguation"})
 				}
 
 				else
 				{
+					console.log("this is called twice")
 					currentClass.currentStage = "parameterFilling"
-					currentClass.companies.push({
+					currentClass.Services.push({
 							"id":results[0]["id"],
 							"company":results[0]["company"],
-							"function":results[0]["function"],
+							"serviceName":results[0]["serviceName"],
 							"keywords":results[0]["keywords"]
 					})
-					callback({callNext:true,message:"Company Found",type:"serviceDisambiguation"},callback)
+					currentClass["parameterFilling"](currentClass,currentClass.prevCallback)
 				}
 			})
 
@@ -351,6 +480,25 @@ function session(sessionId,latitude,longitude){
 
 
 		
+
+
+	}
+	this.parameterFilling = function(currentClass,callback)
+	{
+
+		let apiCompany = currentClass["companies"][0]["company"]
+		let apiServiceName = currentClass["Services"][0]["serviceName"]
+		currentClass.paramRequired = paramDescription[apiCompany][apiServiceName]
+		console.log(currentClass.paramRequired)
+
+
+
+
+
+		currentClass.mainCallback({callNext:false,message:currentClass.Services[0]["serviceName"],type:"parameterFilling"})
+	}
+
+	this.getResult = function(){
 
 
 	}
@@ -396,6 +544,7 @@ function findAllSynonyms(allWords,callback){
 		if(err) console.log(err)
 		else 
 		{
+			results.concat(allWords)
 			callback(results)
 		}
 	})
@@ -420,9 +569,47 @@ function companyDisambiguationMessageCreator(companies){
 
 }
 
-function serviceDisambiguationMessageCreator(currentClass)
+function serviceDisambiguationMessageCreator(services)
 {
-	return currentClass.companies[0]["company"]
+	let arrayLength = services.length
+	let initString = "Do you require service according to "
+	initString = initString + services[0]["serviceName"]
+	for (i = 1; i<services.length-1;i++)
+	{
+		initString = initString +", "+ services[i]["serviceName"] 
+	}
+	initString = initString +" or "+ services[arrayLength-1]["serviceName"] +"?"
+
+	return initString
+
+	return currentClass.services[0]["serviceName"]
+}
+
+
+
+function fuzzyCheckOptions(nodeObjects,message,forName,callback){
+	let arrayOfStrings = []
+	async.each(nodeObjects,(item,cb1)=>{
+		arrayOfStrings.push(item[forName])
+		cb1(null)
+	},(err)=>{
+		if(err)console.log(err)
+		else{
+			nlParser.fuzzy([message,arrayOfStrings],(err,data)=>{
+				
+				console.log(data)
+				
+				
+
+				
+				callback(true,{})
+			})
+
+		}
+	})
+
+
+
 }
 
 module.exports = session

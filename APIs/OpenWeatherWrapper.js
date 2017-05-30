@@ -80,15 +80,15 @@ const Weather = (key) => ({
 
 
 module.exports = Weather
-//var more= {lat:'28.612205', lon:'77.034980'}
+var more= {lat:'28.612205', lon:'77.034980'}
 //Weather('xxx').forecast(more, (err, data) => {
 //	if(!err && data){
 //		console.log(data)
 //	}
 //})
 
-//Weather('xxx').currentWeather(more, (err, data) => {
-//	if(!err && data){
-//		console.log(data)
-//	}
-//});
+Weather('219cda475ab3a9c0a17abe166b25a239').currentWeather(more, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}
+});

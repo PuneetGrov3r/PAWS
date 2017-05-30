@@ -1,12 +1,11 @@
 exports.open_weather = {
-	"currentWeather":{
-		"latitude":"string",
-		"longitude":"string"
+	"current":{
+		"latitude":null,
+		"longitude":null
 	},
 	"forecast":{
-		"latitude":"string",
-		"longitude":"string"
+		"latitude":null,
+		"longitude":null
 	}
-
-
 }
+

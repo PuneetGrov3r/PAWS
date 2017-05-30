@@ -20,7 +20,7 @@ two.synonymParser("holiday", (err, data) => {
 	}
 })
 
-three.parseNV("I need a definition", (err, data) => {
+three.parseNV("give me the definition of water", (err, data) => {
 	if(err){
 		console.log(`Error: ${err}`);
 	}else{
@@ -28,7 +28,7 @@ three.parseNV("I need a definition", (err, data) => {
 	}
 })
 
-four.fuzzy(['ef',['abc','def','ghi','jkl','mno','pqr']], (err, data) => {
+four.fuzzy(['restraunts',['restraunt','def','ghi','jkl','mno','pqr']], (err, data) => {
   if(err) throw new Error(err);
   else{
     console.log(data);
