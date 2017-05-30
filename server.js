@@ -35,6 +35,7 @@ app.get('/requestMessage',(req,res,next)=>{
 	let currentSession = sessionsObj[sessionId]
 	
 	currentSession.parseMessage(msg,type,(replyObj)=>{
+		console.log("reply")
 		console.log(replyObj)
 		res.send(replyObj)
 		//res.end(replyObj)

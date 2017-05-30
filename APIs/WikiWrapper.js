@@ -148,8 +148,8 @@ const Wiki = () => ({
 });
 
 
-
-
+exports.Wiki = Wiki
+/*
 
 Wiki().getDefination('cool', (err, data) => {
 	if(err){
@@ -157,4 +157,4 @@ Wiki().getDefination('cool', (err, data) => {
 		return;
 	}
 	console.log(data);
-});
+});*/

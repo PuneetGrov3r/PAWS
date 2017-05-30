@@ -54,8 +54,34 @@ class Driver {
 		    }
 		});
 
-
-
+	}
+	getLevel2Keywords(company,callback){
+		db.cypher({
+		    query: 'MATCH (:LEVEL1 {company:{compName}})-[:HOP2]->(a:LEVEL2) RETURN a',
+		    params:{
+		    	compName:company
+		    }
+		}, function (err, results) {
+		    if (err) throw err;
+		    var result = results;
+		    if (!result) {
+		        console.log('Error in finding the root node');
+		        callback(new Error("db error"))
+		    } else {
+		        //var rootNode = result['b'];
+		        let returnArray = []
+		        for(i in results)
+		        {
+		        	let tempObj = {}
+		        	tempObj["keywords"] = results[i]["a"]["properties"]["keywords"]
+		        	tempObj["company"] = results[i]["a"]["properties"]["company"]
+		        	tempObj["id"] = results[i]["a"]["_id"]
+		        	tempObj["serviceName"] = results[i]["a"]["properties"]["serviceName"]
+		        	returnArray.push(tempObj)
+		        }
+		        callback(returnArray)
+		    }
+		});
 
 
 	}

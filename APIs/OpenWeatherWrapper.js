@@ -39,16 +39,19 @@ const Weather = (key) => ({
 					resolve(JSON.parse(body));
 				});
 				p.then( (data) => {
+					callback(data)
 					console.log(data);
 				})
 				.catch( (error) => {
 					console.log(error);
 				})
+				return p
 			}else if(err){
 				console.log(err);
 			}		
 		})
 	}
 })
+exports.Weather = Weather
 
-Weather('xxx').currentWeather();
+//Weather('fd69a8bec4fb9cd33f7a1cf60f4871eb').forecast();
