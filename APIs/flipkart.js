@@ -1,7 +1,7 @@
 //Imported the request Module
 var request = require('request');
 var async = require('async');
-var utilityFunctions = require('./utilityFunctions.js');
+//var utilityFunctions = require('./utilityFunctions.js');
 var productFeedListing = {};
 var categoryMapping ={
 	"food":["food_nutrition"],
@@ -22,11 +22,7 @@ var categoryMapping ={
 };
 
 
-function Flipkart(affId,affToken)
-{
-	this.affId = affId;
-	this.affToken = affToken;
-}
+function Flipkart(){}
 
 
 function categoryProcessor(item,callback)
@@ -114,12 +110,14 @@ Flipkart.prototype.getThisCategoryLink = function(opts,callback)
 }
 Flipkart.prototype.searchProduct = function(searchObject,filter,callback)
 {
+	let affId = 'rvarunweb'
+	let affToken = '8a60ea55b5ce4fd6ae895b843c754180'
 	var url="https://affiliate-api.flipkart.net/affiliate/1.0/search.json";
 	var reqOpts= {
 		url : url,	
 		headers:{
-			"Fk-Affiliate-Id":this.affId,
-			"Fk-Affiliate-Token":this.affToken
+			"Fk-Affiliate-Id":affId,
+			"Fk-Affiliate-Token":affToken
 		},
 		qs:{
 			query:searchObject['searchQuery'],
@@ -299,6 +297,7 @@ Flipkart.prototype.subFunctionCategoryMapping = function(object,filter,callback)
 
 }
 
+/*
 function parseFlipkartResult(jsonString,resultsFor,cb)
 {
 	//console.log(jsonString);
@@ -330,9 +329,19 @@ function parseFlipkartResult(jsonString,resultsFor,cb)
 		else cb(arrayOfProducts,resultsFor);
 	});
 }
-
+*/
 
 
 
 module.exports = Flipkart
 
+
+
+var a = new Flipkart()
+a.searchProduct({'searchQuery': 'moto x play'}, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}else{
+		console.log(err, data)
+	}
+})

@@ -12,7 +12,7 @@ one.parseStanParser("They'll be coming tomorrow.", (err, data) => {
 	}
 })
 
-two.synonymParser("holiday", (err, data) => {
+two.synonymParser("casual", (err, data) => {
 	if(err){
 		console.log(`Error: ${err}`);
 	}else{

@@ -43,9 +43,11 @@ const Extras = () => ({
 
 
 
-const Common = (key) => ({
+const Common = () => ({
+
 
 	categories: (callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		let state = {
 			url:"https://developers.zomato.com/api/v2.1",
 			method:'GET',
@@ -74,6 +76,7 @@ const Common = (key) => ({
 	},
 
 	cities: (more = {q:'delhi', lat:'', lon:'', city_ids:'', count:'5'}, callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		//   more = {
 		//				q: q,                 // query by city name
 		//				lat: lat,
@@ -118,6 +121,7 @@ const Common = (key) => ({
 	},
 
 	collections: (more = {city_id:'1', lat:'', lon:'', count:'10'}, callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		//   more = {
 		//				city_id: city_id,
 		//				lat: lat,
@@ -161,6 +165,7 @@ const Common = (key) => ({
 	},
 
 	cuisines: (more = {city_id:'1', lat:'', lon:''}, callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		//   more = {
 		//				city_id: city_id,
 		//				lat: lat,
@@ -191,11 +196,15 @@ const Common = (key) => ({
 				.catch( (error) => {
 					callback(error, null);
 				});
+			}else{
+				console.log(data);
+				callback(err, null);
 			}
 		})
 	},
 
 	establishments: (more = {city_id:'1', lat:'', lon:'', count:''}, callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		//   more = {
 		//				city_id: city_id,
 		//				lat: lat,
@@ -233,6 +242,7 @@ const Common = (key) => ({
 	},
 
 	geocode: (more = {lat:'28.6118815', lon:'77.0345796'}, callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		//   more = {
 		//				lat: lat,
 		//				lon: lon,
@@ -294,9 +304,10 @@ const Common = (key) => ({
 
 
 
-const Restaurant = (key) => ({
+const Restaurant = () => ({
 	
 	dailymenu: (res_id = '-9999', callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		if(res_id === '-9999'){
 			console.log('You need to provide "res_id" as argument...');
 			return;
@@ -328,6 +339,7 @@ const Restaurant = (key) => ({
 	},
 
 	restaurant: (res_id = '-9999', callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		if(res_id === '-9999'){
 			console.log('You need to provide "res_id" as argument...');
 			return;
@@ -371,6 +383,7 @@ const Restaurant = (key) => ({
 	},
 
 	reviews: (more = {res_id: '-9999', start: '', count: ''}, callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		//
 		//	more = {
 		//		res_id: res_id
@@ -449,6 +462,7 @@ const Restaurant = (key) => ({
 				'user-key': ''
 			},
 		};
+		const key = '8c566e4798eca2737581bd3c21390711'
 		state.headers['user-key'] = key;
 		state.url += '/search?';
 		let temp = '';
@@ -528,7 +542,9 @@ const Restaurant = (key) => ({
 
 
 const Location = (state) => ({
+
 	locations: (more = { query : 'delhi', lat: '', lon: '', count: '5'}, callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		//
 		//	more = {
 		//		query : query,			//suggestion for location name
@@ -578,6 +594,7 @@ const Location = (state) => ({
 	},
 
 	location_details: (more = { entity_id: '793', entity_type: 'group' }, callback) => {
+		const key = '8c566e4798eca2737581bd3c21390711'
 		//
 		//	more = {
 		//		entity_id: entity_id		//location id obtained from locations api
@@ -633,23 +650,90 @@ const Location = (state) => ({
 
 
 
-const Custom = (key) => ({
-	fetchByRestName: (name, callback) => {
+
+
+const cuisines = {'burger': '168', 'cafe':'30', 'bbq':'193', 'bakery':'5', 'beverages':'270', 'biryani':'7', 'chinese':'25', 'continental':'35', 'fast food': '40',
+					'french':'45', 'grill':'181', 'hydrabadi':'49', 'ice creame': '233', 'indian': '148', 'pizza': '82', 'sandwich': '304', 'seafood':'83', 'south indian': '85',
+					'tea': '163', 'vegetarian':'308', 'italian':'55', 'japanese':'60', 'juices':'164', 'mithai':'1015', 'street food': '90'
+}
+
+const categories = {
+	'delivery':'1', 'dine out':'2','nightlife':'3','catchingup':'4', 'take away':'5', 'cafes':'6', 'daily menus':'7',  'breakfast':'8', 'lunch':'9', 'dinner':'10', 'clubs lounges':'14',
+	'bar pubs':'11', 'pocket friendly':'13'
+}
+
+const establishments ={
+	'casual dining':'16', 'fine dining': '18', 'quick bites':'21', 'food court':'20', 'dessert parlour':'23', 'cafe':'1', 'dhaba':'61', 'club':'8', 'bar':'7',
+	'bakery':'31', 'cocktail':'272', 'wine bar': '278', 'pub': '6', 'butcher shop': '291'
+}
+
+const estdict = {
+	'casual dining':{
+		'cuisines' : ['north indian', 'chinese', 'continental', 'italian', 'south indian', 'fast food', 'thai'],
+		'categories' : ['delivery', 'dine out', 'drinks', 'cafe']
+	},
+	'fine dining':{
+		'cuisines' : ['north indian', 'continental', 'chinese', 'italian', 'european'],
+		'categories' : ['dine out']
+	},
+	'club':{
+		'cuisines' : ['finger food', 'chinese', 'north indian'],
+		'categories' : ['drink', 'nightlife']
+	},/*
+	'quick bites':{
+		'cuisines' : ['north indian', 'fast food', 'chinese', 'south indian', 'street food', 'burger'],
+		'categories' : ['delivery', 'dine out']
+	}*/
+	'cafe':{
+		'cuisines' : ['cafe', 'fast food', 'italian', 'continental'],
+		'categories': ['delivery', 'dine out']
+	},
+	'dhaba' :{
+		'cuisines' :['north indian'],
+		'categories' : ['delivery', 'dine out']
+	},
+	'bar' :{
+		'cuisines':['dine out', 'drinks', 'night life'],
+		'categories': ['north indian', 'chinese', 'continental']
+	},
+	'dessert parlour': {
+		'cuisones': ['ice cream'],
+		'categories':[]
+	},
+	'quick bites': {
+		'cuisines': ['fast food', 'burger', 'pizza', 'bakery'],
+		'category': ['delivery', 'dine out']
+	}
+}
+const cuidict = {
+
+}
+/*
+const Custom = () => ({
+	byCuisine: ( more = {'cuisine': ''}, callback) => {
+		let estab = 
+		Restaurant().search({ entity_id : '0', entity_type : '', q : '',
+						start : '', count : '', lat : '28',
+						lon : '77', radius : '50000', cuisines : '', establishment_type : '',
+						collection_id : '', category : '', sort : 'rating', order : 'desc' })
 	}
 });
+
+*/
+
+
 
 
 
 
 Common('8c566e4798eca2737581bd3c21390711').cuisines(more = {city_id:'1', lat:'', lon:''}, (err, data) => {
-	data.forEach( (cui, count) => {
-		//console.log(cui);
-		if(count>2) return
-		Restaurant('8c566e4798eca2737581bd3c21390711').search({ entity_id : '', entity_type : '', q : '',
-						start : '', count : '', lat : '28.6118815',
-						lon : '77.0345796', radius : '10000', cuisines : cui['cuisine']['cuisine_id'], establishment_type : '',
-						collection_id : '', category : '', sort : 'rating', order : 'desc' });
-	});
+	if(!error){
+		data.forEach( (cui, count) => {
+			console.log(cui);
+		});
+	}else{
+		console.log(err);
+	}
 });
 
 /*

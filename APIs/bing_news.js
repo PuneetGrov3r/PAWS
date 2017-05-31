@@ -74,24 +74,29 @@ BingNews.prototype.searchNews = function(more= {'searchObject': {},'filter': ''}
 	var url = "https://api.cognitive.microsoft.com/bing/v5.0/news/search";
 	//Assigning various properties to the http request
 	var reqOpts = {
-		url:url,
-		headers:[{
-			name:'Ocp-Apim-Subscription-Key',
-			value: apiKey
-		}],
+		method:"GET",
+		uri:url,
+		headers:{
+			"Ocp-Apim-Subscription-Key":apiKey
+		},
 		qs:
 		{
 			"q":more['searchObject']["searchQuery"],
 		},
-		method:"GET"
+
 	}
 	if(more['searchObject']["count"] && more['searchObject']["count"].length !== 0) reqOpts.qs["count"] = more['searchObject']["count"];
 	if(more['searchObject']["offset"] && more['searchObject']["offset"].length !== 0) reqOpts.qs["offset"] = more['searchObject']["offset"];
 	if(more['searchObject']["market"] && more['searchObject']["market"].length !== 0) reqOpts.qs["mkt"] = more['searchObject']["market"];
 	if(more['searchObject']["safeSearch"] && more['searchObject']["safeSearch"].length !== 0) reqOpts.qs["safeSearch"] = more['searchObject']["safeSearch"];
-	//console.log(reqOpts);
+	console.log(reqOpts);
 	request(reqOpts,function(err,response,body){
-		if(err)callback(err,null);
+		console.log(body)
+		if(err){
+			callback(err,null);
+		}else if(response.statusCode !== 200){
+			console.log(response.statusCode)
+		}
 		else if (response.statusCode === 200)
 		{
 			//The result is parsed to a standard format for displaying to the frontend
@@ -171,10 +176,10 @@ function categoryNewsParser(body,callback)
 
 module.exports = BingNews;
 
-/*
+
 var a = new BingNews()
 a.searchNews({'searchObject': {
-	'searchQuery': 'Today\'s News',
+	'searchQuery': 'World News',
 	'count': 10,
 	'offset': 0,
 	'market': 'en-in',
@@ -186,4 +191,3 @@ a.searchNews({'searchObject': {
 		console.log(err, data)
 	}
 })
-*/

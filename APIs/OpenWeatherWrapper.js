@@ -19,7 +19,7 @@ const Weather = () => ({
 					resolve(JSON.parse(body));
 				});
 				p.then( (data) => {
-					//console.log(data)
+					console.log(data)
 					if(data['sys']['counntry'] && data['name'])out['location'] = data['name'].toString() + ', ' + data['sys']['counntry'].toString()
 					out['main'] = data['weather'][0]['main']
 					out['temp'] = data['main']['temp']

@@ -14,7 +14,7 @@ const Food = () => ({
 		//
 		//
 		//
-		var out = {'food':[]}
+		var out = []
 		//
 		//
 		//
@@ -28,13 +28,14 @@ const Food = () => ({
 				p.then( (data) => {
 					var i
 					for(i=0;i<data['recipes'].length;++i){
+						console.log(data['recipes'][i])
 						if(i>4) return out;
 						let d = {
+							image_url: data['recipes'][i]['image_url'],
 							title : data['recipes'][i]['title'],
 							recipe_id: data['recipes'][i]['recipe_id'],
-							image_url: data['recipes'][i]['image_url']
 						}
-						out['food'].push(d)
+						out.push(d)
 						//console.log(out);
 					}
 				}).then( (data) => {
@@ -62,12 +63,12 @@ const Food = () => ({
 					resolve(JSON.parse(body));
 				});
 				p.then( (data) => {
+					out['image_url'] = data['recipe']['image_url']   // ***
+					out['title'] = data['recipe']['title']
 					out['f2f_url'] = data['recipe']['f2f_url']
 					out['ingredients'] = data['recipe']['ingredients']  // ***
 					out['source_url'] = data['recipe']['source_url']   // **** Necesarry! Contains How to make ****
-					out['recipe_id'] = data['recipe']['recipe_id']
-					out['image_url'] = data['recipe']['image_url']   // ***
-					out['title'] = data['recipe']['title']
+					//out['recipe_id'] = data['recipe']['recipe_id']
 					if(out){
 						callback(null, out)
 					}
@@ -94,9 +95,46 @@ const Food = () => ({
 				let p = new Promise((resolve, reject) => {
 					resolve(JSON.parse(body));
 				});
+				let out = []
 				p.then( (data) => {
-					let rId = data['recipes'][0]['recipe_id']
-					Food(key).recipe({'rId': rId}, callback)
+					//console.log(data)
+					for(var i =0; i<data['recipes'].length; ++i){
+					//data['recipes'].forEach( (data, count) => {
+						let rId = data['recipes'][i]['recipe_id']
+						let st = {
+							method: 'GET',
+							url: 'http://food2fork.com/api/get'
+						};
+						st.url += '?key=' + key + '&rId=' + more['rId'];
+						let out = {}
+						req(st, (err, res, body) => {
+							if(!err && res.statusCode === 200){
+								let p = new Promise((resolve, reject) => {
+									resolve(JSON.parse(body));
+								});
+								p.then( (data) => {
+									o['image_url'] = data['recipe']['image_url']   // ***
+									o['title'] = data['recipe']['title']
+									//o['f2f_url'] = data['recipe']['f2f_url']
+									o['2'] = data['recipe']['ingredients']  // ***
+									o['3'] = data['recipe']['source_url']   // **** Necesarry! Contains How to make ****
+									//out['recipe_id'] = data['recipe']['recipe_id']
+									out.push(o)
+									//console.log(data)
+								}).catch( (error) => {
+									console.log(error);
+								})
+							}
+							else if(err){
+								console.log(err);
+							}
+						});
+						if(i>6){
+							return out;
+						}
+					}
+				}).then( (data) => {
+					callback(null, data);
 				})
 				.catch( (error) => {
 					callback(error, null);
@@ -112,9 +150,13 @@ const Food = () => ({
 
 module.exports = Food
 
-//Food('xxx').search('chicken biryani', (err, data) => {
-//	console.log(data)
-//})
+Food().searchNRecipe({'name':'chicken biryani'}, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}else{
+		console.log(err, data)
+	}
+})
 //Food('xxx').recipe('35171', (err, data) => {
 //	console.log(data);
 //});
