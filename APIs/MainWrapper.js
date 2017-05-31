@@ -5,6 +5,8 @@ const wk = require('./WikiWrapper.js');
 const mrk = require('./MarkitAPIWrapper.js');
 const bw = require('./bing_news.js');
 const bnw = new bw();
+const fp = require('./flipkart.js');
+const fpk = new fp();
 
 //done
 exports.food2fork = {
@@ -42,4 +44,8 @@ exports.markit = {
 exports.bing = {
 	"caterogry": bnw.categoryNews,
 	"search": bnw.searchNews
+}
+
+exports.flipkart = {
+	"search": fpk.searchProduct
 }

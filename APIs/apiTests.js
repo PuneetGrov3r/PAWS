@@ -11,6 +11,7 @@ mainWrapper.food2fork['search']({'name':'Butter Chicken'}, (err, data) => {
 	}
 })
 */
+/*
 mainWrapper.Wikipedia['summary']({'title': 'india gate'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
@@ -20,13 +21,14 @@ mainWrapper.Wikipedia['summary']({'title': 'india gate'}, (err, data) => {
 })	
 
 
-mainWrapper.Wikipedia['definition']({'word':'cool'}, (err, data) => {
+mainWrapper.Wikipedia['definition']({'word':'atom'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{
 		console.log(err, data)
 	}
 })
+*/
 /*
 newsQuery = ['financial markets', 'hollywood updates', 'science updates', 'top stories', 'world news']
 
@@ -55,3 +57,11 @@ mainWrapper.food2fork['searchNRecipe']({'name': 'Chiken Biryani'}, (err, data) =
 	}
 })
 */
+
+mainWrapper.flipkart['search']({'searchQuery' : 'iPhone'}, (err, data) =>{
+	if(!err && data){
+		console.log(data)
+	}else{
+		console.log(err, data)
+	}
+})

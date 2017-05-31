@@ -108,7 +108,7 @@ Flipkart.prototype.getThisCategoryLink = function(opts,callback)
 
 	});
 }
-Flipkart.prototype.searchProduct = function(searchObject,filter,callback)
+Flipkart.prototype.searchProduct = function(searchObject,callback)
 {
 	let affId = 'rvarunweb'
 	let affToken = '8a60ea55b5ce4fd6ae895b843c754180'

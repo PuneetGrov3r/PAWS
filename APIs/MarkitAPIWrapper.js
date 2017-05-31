@@ -96,7 +96,7 @@ const Markit = () => ({
 
 module.exports = Markit
 
-
+/*
 Markit().lookupNPrice({'input':'Apple'}, (err, data) => {
 	if(!err){
 		console.log(data);	
@@ -105,3 +105,4 @@ Markit().lookupNPrice({'input':'Apple'}, (err, data) => {
 	}
 
 });
+*/
