@@ -27,7 +27,6 @@ const Wiki = () => ({
 
 		}, (err) => {
 			if(!err){
-				let out = [{}]
 				state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';
 				state.url += '&titles=' + str;
 				console.log(str)
@@ -38,9 +37,9 @@ const Wiki = () => ({
 							resolve(JSON.parse(body)['query']['pages']);
 						});
 						p.then( (data) => {
-							//console.log(data)
+							console.log(data)
 							//Wiki().getURL(Object.keys(data)[0], callback)
-							return data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));
+							callback(null, data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));
 						})
 						.catch( (error) => {
 							callback(err, null);
@@ -112,50 +111,74 @@ const Wiki = () => ({
 				'Api-User-Agent': 'Example/1.0',
 			}
 		}
-		state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';  
-		state.url += '&titles=' + more['title'];
-		req(state, (err, res, body) => {
-			if(!err && res.statusCode === 200){
-				let p = new Promise((resolve, reject) => {
-					resolve(JSON.parse(body)['query']['pages']);
-				});
-				p.then( (data) => {
-					var id = Object.keys(data)[0]
-					let state = {
-						method: 'GET',
-						url: 'https://en.wikipedia.org/w/api.php',
-						headers: {
-							'Api-User-Agent': 'Example/1.0',
-						}
-					}
-					state.url += '?action=query&format=json&prop=info&inprop=url';
-					state.url += '&pageids=' + id;
-					
-					req(state, (er, re, b) => {
-						if(!er && re.statusCode === 200){
-							let p1 = new Promise((resolve, reject) => {
-								resolve(JSON.parse(b));
-							});
-							p1.then( (parsed) => {
-								parsed = parsed['query']['pages'];
-								parsed = parsed[Object.keys(parsed)[0]];
-								callback(null, parsed['fullurl']);
-							})
-							.catch( (err) => {
-								callback(err, null);
-							})
-						}
-					});
+		let out = [{}]
+		let str = ''
+		async.each(more['title'].split(' '), (item, cb) => {
+			let p = new Promise((resolve, reject) => {
+				resolve(item[0].toUpperCase())
+			});
+			p.then( (data) => {
+				str += data + item.substring(1, item.length) + ' '
+				cb(null)
+			})
+			.catch( (err) => {
+				console.log(err);
+			})
 
+		}, (err) => {
+			if(!err){
+				state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';  
+				state.url += '&titles=' + str;
+				out[0]['title'] = str
+				req(state, (err, res, body) => {
+					if(!err && res.statusCode === 200){
+						let p = new Promise((resolve, reject) => {
+							resolve(JSON.parse(body)['query']['pages']);
+						});
+						p.then( (data) => {
+							out[0]['summary'] = data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, "")
+							var id = Object.keys(data)[0]
+							let state = {
+								method: 'GET',
+								url: 'https://en.wikipedia.org/w/api.php',
+								headers: {
+									'Api-User-Agent': 'Example/1.0',
+								}
+							}
+							state.url += '?action=query&format=json&prop=info&inprop=url';
+							state.url += '&pageids=' + id;
+							req(state, (er, re, b) => {
+								if(!er && re.statusCode === 200){
+									let p1 = new Promise((resolve, reject) => {
+										resolve(JSON.parse(b));
+									});
+									p1.then( (parsed) => {
+										parsed = parsed['query']['pages'];
+										parsed = parsed[Object.keys(parsed)[0]];
+										out[0]['url'] = parsed['fullurl']
+										callback(null, out);
+									})
+									.catch( (err) => {
+										callback(err, null);
+									})
+								}
+							});
+
+						})
+						.catch( (error) => {
+							callback(err, null);
+						});
+					}
+					else if(err){
+						console.log(err, null);
+					}
 				})
-				.catch( (error) => {
-					callback(err, null);
-				});
-			}
-			else if(err){
-				console.log(err, null);
+
+			}else{
+				console.log(err);
 			}
 		})
+		
 	},
 
 	getDefination: (more = {'word':''}, callback) => {
@@ -211,7 +234,9 @@ Wiki().getDefination('cool', (err, data) => {
 	}
 	console.log(data);
 });
-Wiki().getURL('Mahatma Gandhi', (err, data) => {
+
+
+Wiki().getURL({'title':'mahatma gandhi'}, (err, data) => {
 	console.log(data)
 })
 

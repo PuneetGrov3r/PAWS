@@ -25,9 +25,9 @@ exports.open_weather = {
 
 exports.Wikipedia = {
 	"definition": wk().getDefination,
-	"url": wk().getURL,  // takes name of article as argument same as getSummary
+	"url": wk().getSummary,  // takes name of article as argument same as getSummary
 	"locality": wk().getLocality,
-	"summary": wk().getSummary
+	"summary": wk().getURL
 }
 
 
