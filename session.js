@@ -451,7 +451,6 @@ function session(sessionId,latitude,longitude){
 				});
 			
 			},(err,results)=>{
-				currentClass.Services = []
 				if(results.length == 0){
 					currentClass.currentService = arrayOfNodes
 					currentClass.mainCallback({callNext:false,
@@ -473,6 +472,7 @@ function session(sessionId,latitude,longitude){
 
 					console.log("this is called twice")
 					currentClass.currentStage = "parameterFilling"
+					currentClass.Services = []
 					currentClass.Services.push({
 							"id":results[0]["id"],
 							"company":results[0]["company"],
