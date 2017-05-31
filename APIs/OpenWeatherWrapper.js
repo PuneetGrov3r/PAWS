@@ -90,7 +90,7 @@ Weather().forecast(more, (err, data) => {
 		console.log(data)
 	}
 })
-*/
+
 Weather().currentWeather(more, (err, data) => {
 	if(!err && data){
 		console.log(data)
@@ -99,3 +99,4 @@ Weather().currentWeather(more, (err, data) => {
 	}
 });
 
+*/
