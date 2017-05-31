@@ -56,22 +56,21 @@ const Food = () => ({
 			url: 'http://food2fork.com/api/get'
 		};
 		state.url += '?key=' + key + '&rId=' + more['rId'];
-		var out = {}
+		var out = []
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
 					resolve(JSON.parse(body));
 				});
 				p.then( (data) => {
-					out['image_url'] = data['recipe']['image_url']   // ***
-					out['title'] = data['recipe']['title']
-					out['f2f_url'] = data['recipe']['f2f_url']
-					out['ingredients'] = data['recipe']['ingredients']  // ***
-					out['source_url'] = data['recipe']['source_url']   // **** Necesarry! Contains How to make ****
+					let o = {}
+					o['image_url'] = data['recipe']['image_url']   // ***
+					o['title'] = data['recipe']['title']
+					o['f2f_url'] = data['recipe']['f2f_url']
+					o['ingredients'] = data['recipe']['ingredients']  // ***
+					o['source_url'] = data['recipe']['source_url']   // **** Necesarry! Contains How to make ****
 					//out['recipe_id'] = data['recipe']['recipe_id']
-					if(out){
-						callback(null, out)
-					}
+					callback(null, out.push(o))
 					//console.log(data)
 				}).catch( (error) => {
 					console.log(error);

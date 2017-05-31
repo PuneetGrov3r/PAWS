@@ -91,7 +91,7 @@ const Weather = () => ({
 
 module.exports = Weather
 
-
+/*
 var more= {'lat':'28.612205', 'lon':'77.034980'}
 
 Weather().forecast(more, (err, data) => {
@@ -108,3 +108,4 @@ Weather().currentWeather(more, (err, data) => {
 	}
 });
 
+*/

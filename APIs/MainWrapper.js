@@ -6,6 +6,7 @@ const mrk = require('./MarkitAPIWrapper.js');
 const bw = require('./bing_news.js');
 const bnw = new bw();
 
+//done
 exports.food2fork = {
 	"search": f2f().search,
 	"recipe": f2f().recipe,
@@ -16,13 +17,13 @@ exports.maps = {
 	"places":mp().places,
 	"direction":mp().direction
 }
-
+//done
 exports.open_weather = {
 	"current": ow().currentWeather,
 	"forecast": ow().forecast
 }
 
-
+//done
 exports.Wikipedia = {
 	"definition": wk().getDefination,
 	"url": wk().getSummary,  // takes name of article as argument same as getSummary
@@ -31,7 +32,7 @@ exports.Wikipedia = {
 }
 
 
-
+//done
 exports.markit = {
 	"lookup": mrk().lookup,
 	"price": mrk().price,

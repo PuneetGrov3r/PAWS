@@ -50,6 +50,7 @@ const Markit = () => ({
 			method: 'GET',
 			url: 'http://dev.markitondemand.com/MODApis/Api/Lookup/json'
 		}
+		let out = []
 		state.url += '?input=' + more['input'];
 		req(state, (err, res, body) => {
 			let p = new Promise((resolve, reject) => {
@@ -68,7 +69,9 @@ const Markit = () => ({
 						resolve(JSON.parse(body));
 					});
 					p1.then( (data) => {
-						callback(null, data['Data']);
+						data['Data']['Timestamp'] = new Date(data['Data']['Timestamp']).toDateString()
+						out.push(data['Data'])
+						callback(null, out);
 					})
 					.catch( (err) => {
 						callback(err, null);
@@ -86,7 +89,7 @@ const Markit = () => ({
 module.exports = Markit
 
 
-Markit().lookupNPrice('Apple', (err, data) => {
+Markit().lookupNPrice({'input':'Apple'}, (err, data) => {
 	if(!err){
 		console.log(data);	
 	}else{

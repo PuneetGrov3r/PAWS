@@ -1,7 +1,7 @@
 //Imported the request Module
 var request = require('request');
 var async = require('async');
-//var utilityFunctions = require('./utilityFunctions.js');
+var utilityFunctions = require('./utilityFunctions.js');
 var productFeedListing = {};
 var categoryMapping ={
 	"food":["food_nutrition"],
@@ -297,7 +297,7 @@ Flipkart.prototype.subFunctionCategoryMapping = function(object,filter,callback)
 
 }
 
-/*
+
 function parseFlipkartResult(jsonString,resultsFor,cb)
 {
 	//console.log(jsonString);
@@ -329,7 +329,7 @@ function parseFlipkartResult(jsonString,resultsFor,cb)
 		else cb(arrayOfProducts,resultsFor);
 	});
 }
-*/
+
 
 
 
