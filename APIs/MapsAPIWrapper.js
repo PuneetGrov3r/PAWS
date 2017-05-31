@@ -1,11 +1,12 @@
 'use strict'
 
 const request = require('request');
-const key = 'xxx'
+
 
 
 const Maps = () => ({
 	places: (more={lat:'',lon:'',radius:'',type:'',name:''}, callback) => {
+		const key = 'AIzaSyA9rnY3Ud1q3vswXsYFjd3qFFnvTDmMBmI'
 		let state = {
 			method: 'GET',
 			url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
@@ -59,6 +60,7 @@ const Maps = () => ({
 	},
 
 	direction: (more={origin:'', destination:'', mode:'driving'}, callback) => {
+		const key = 'AIzaSyA9rnY3Ud1q3vswXsYFjd3qFFnvTDmMBmI'
 		let state = {
 			method: 'GET',
 			url: 'https://maps.googleapis.com/maps/api/directions/json'
@@ -102,11 +104,43 @@ const Maps = () => ({
 			}
 		})
 	},
-
+	geocoding: (more={'address':''}, callback) => {
+		const key = 'AIzaSyA9rnY3Ud1q3vswXsYFjd3qFFnvTDmMBmI'
+		let state = {
+			method: 'GET',
+			url: 'https://maps.googleapis.com/maps/api/geocode/json?address='
+		}
+		state.url += more['address']
+		state.url += '&key=' + key
+		var out =[]
+		request(state, (err, res, body) => {
+			if(!err && res.statusCode === 200){
+				let p = new Promise((resolve, reject) => {
+					resolve(JSON.parse(body)['results'][0]);
+				});
+				p.then( (data) => {
+					console.log(data)
+				})
+				.then( (data) => {
+					callback(null, out)
+				})
+				.catch( (error) => {
+					console.log(error);
+				})
+			}
+		})
+	},
 	
 });
 
 module.exports = Maps
 
+Maps().geocoding({'address':'Dwarka Mor, Delhi'}, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}else{
+		console.log(err, data)
+	}
+})
 //Maps('xxx').places(more={lat:'28.592140',lon:'77.046051',radius:'50000',type:'place',name:'India Gate'})
 //Maps('xxx').direction(more={origin:'Dwarka Mor, Delhi, India', destination:'Dwarka Sector 4, Delhi, India', mode:'driving'})

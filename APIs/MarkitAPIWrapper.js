@@ -70,14 +70,14 @@ const Markit = () => ({
 					});
 					p1.then( (data) => {
 						let obj ={}
-						obj['Title'] = data['Data']['Name']
-						obj['Date'] = new Date(data['Data']['Timestamp']).toDateString()
-						obj['Symbol'] = data['Data']['Symbol']
-						obj['LastPrice'] = data['Data']['LastPrice']
-						obj['High_Open_Low'] = data['Data']['High'] + ' ~ ' + data['Data']['Open'] +  ' ~ ' + data['Data']['Low']
-						obj['PercentChange'] = data['Data']['ChangePercent']
-						obj['MarketCap'] = data['Data']['MarketCap']
-						obj['Volume'] = data['Data']['Volume']
+						obj['title'] = data['Data']['Name']
+						obj['date'] = new Date(data['Data']['Timestamp']).toDateString()
+						obj['symbol'] = data['Data']['Symbol']
+						obj['lastPrice'] = data['Data']['LastPrice']
+						obj['open_high_low'] = data['Data']['Open'] +  ' ~ ' + data['Data']['High'] + ' ~ ' + data['Data']['Low']
+						obj['percentChange'] = data['Data']['ChangePercent']
+						obj['marketCap'] = data['Data']['MarketCap']
+						obj['volume'] = data['Data']['Volume']
 						out.push(obj)
 						callback(null, out);
 					})
