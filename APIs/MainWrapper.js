@@ -7,18 +7,19 @@ const bw = require('./bing_news.js');
 const bnw = new bw();
 const fp = require('./flipkart.js');
 const fpk = new fp();
-const maps = require('./MapsAPIWrapper.js');
+const zom = require('./ZomatoWrapper.js');
 
 //done
 exports.food2fork = {
 	"search": f2f().search,
-	"recipe": f2f().recipe,
+	"recipe": f2f().searchNRecipe,
 	"searchNRecipe": f2f().searchNRecipe // Source URL Imp., contains how to make...
 }
 
 exports.maps = {
 	"places":mp().places,
-	"direction":mp().direction
+	"direction":mp().direction,
+	'geocoding': mp().geocoding
 }
 //done
 exports.open_weather = {
@@ -51,6 +52,6 @@ exports.flipkart = {
 	"search": fpk.searchProduct
 }
 
-exports.Maps = {
-	'geocoding': maps().geocoding
+exports.zomato = {
+	"search": zom().search
 }

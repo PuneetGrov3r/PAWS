@@ -110,8 +110,8 @@ const Food = () => ({
 								o['image_url'] = data['recipe']['image_url']   // ****
 								o['title'] = data['recipe']['title']
 								//o['f2f_url'] = data['recipe']['f2f_url']
-								o['1'] = data['recipe']['ingredients']  // ****
-								o['2'] = data['recipe']['source_url']   // **** Necesarry! Contains How to make ****
+								o['description'] = data['recipe']['ingredients'].join('\n')  // ****
+								o['url'] = data['recipe']['source_url']   // **** Necesarry! Contains How to make ****
 								//out['recipe_id'] = data['recipe']['recipe_id']
 								out.push(o)
 								cb(null)

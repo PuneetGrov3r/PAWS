@@ -3,6 +3,7 @@
 const request = require('request');
 const co = require('co');
 const fs = require('fs');
+const async = require('async');
 
 const Extras = () => ({
 	appendObject: (obj, name) => {
@@ -434,9 +435,10 @@ const Restaurant = () => ({
 		});
 	},
 
-	search: (more = { entity_id : '', entity_type : '', q : 'night', start : '', count : '', lat : '28', 
-						lon : '77', radius : '50000', cuisines : '', establishment_type : '',
-						 collection_id : '', category : '', sort : '', order : '' }, callback) => {
+	search: (more = { entity_id : '1', entity_type : 'city', q : '',
+						start : '0', count : '10', lat : '28.592140',
+						lon : '77.046051', radius : '50000', cuisines : '148, 85, 40, 82', establishment_type : '16, 21, 1',
+						collection_id : '', category : '1, 2', sort : 'real_distance', order : 'desc' }, callback) => {
 		//
 		//	more = {
 		//		entity_id = '',				// entity_id = location id
@@ -466,22 +468,23 @@ const Restaurant = () => ({
 		state.headers['user-key'] = key;
 		state.url += '/search?';
 		let temp = '';
-		if(more.q && more.q.length !== 0) temp += 'q=' + more.q;
-		if(more.entity_id && more.entity_id.length !== 0) temp += '&entity_id=' + more.entity_id;
-		if(more.entity_type && more.entity_type.length !== 0) temp += '&entity_type=' + more.entity_type;
-		if(more.start && more.start.length !== 0) temp += '&start=' + more.start;
-		if(more.count && more.count.length !== 0) temp += '&count=' + more.count;
+		//if(more.q && more.q.length !== 0) temp += 'q=' + more.q;
+		//if(more.entity_id && more.entity_id.length !== 0) temp += '&entity_id=' + more.entity_id;
+		temp += 'entity_id=1&entity_type=city&start=0&count=10&radius=50000&cuisines=148,85,40,82&establishment_type=16,21,1&category=1,2&sort=rating&order=desc'
+		//if(more.entity_type && more.entity_type.length !== 0) temp += '&entity_type=' + more.entity_type;
+		//if(more.start && more.start.length !== 0) temp += '&start=' + more.start;
+		//if(more.count && more.count.length !== 0) temp += '&count=' + more.count;
 		if(more.lat && more.lat.length !== 0) temp += '&lat=' + more.lat;
 		if(more.lon && more.lon.length !== 0) temp += '&lon=' + more.lon;
-		if(more.radius && more.radius.length !== 0) temp += '&radius=' + more.radius;
-		if(more.cuisines && more.cuisines.length !== 0) temp += '&cuisines=' + more.cuisines;
-		if(more.establishment_type && more.establishment_type.length !== 0) temp += '&establishment_type=' + more.establishment_type;
-		if(more.collection_id && more.collection_id.length !== 0) temp += '&collection_id=' + more.collection_id;
-		if(more.category && more.category.length !== 0) temp += '&category=' + more.category;
-		if(more.sort && more.sort.length !== 0) temp += '&sort=' + more.sort;
-		if(more.order && more.order.length !== 0) temp += '&order=' + more.order;
+		//if(more.radius && more.radius.length !== 0) temp += '&radius=' + more.radius;
+		//if(more.cuisines && more.cuisines.length !== 0) temp += '&cuisines=' + more.cuisines;
+		//if(more.establishment_type && more.establishment_type.length !== 0) temp += '&establishment_type=' + more.establishment_type;
+		//if(more.collection_id && more.collection_id.length !== 0) temp += '&collection_id=' + more.collection_id;
+		//if(more.category && more.category.length !== 0) temp += '&category=' + more.category;
+		//if(more.sort && more.sort.length !== 0) temp += '&sort=' + more.sort;
+		//if(more.order && more.order.length !== 0) temp += '&order=' + more.order;
 		state.url += temp;
-
+		let out = []
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
@@ -489,18 +492,78 @@ const Restaurant = () => ({
 				});
 				p.then((data) => {
 					
+					async.each(data['restaurants'], (item, cb) =>{
+						//console.log(item)
+						let res_id = item['restaurant']['R']['res_id']
+						let state = {
+							url:"https://developers.zomato.com/api/v2.1",
+							method:'GET',
+							headers:{
+								'user-key': ''
+							},
+						};
+						state.headers['user-key'] = key;
+						state.url += '/restaurant?res_id=' + res_id;
+
+						request(state, (err, res, body) => {
+							if(!err && res.statusCode === 200){
+								let p = new Promise((resolve, reject) => {
+									resolve(JSON.parse(body));
+								});
+								p.then( (data) => {
+									let o = {}
+									o['image_url'] = data['thumb']
+									o['title'] = data['name']
+									o['address'] = data['location']['address']
+									o['rating'] = data['user_rating']['aggregate_rating']
+									o['costForTwo'] = data['currency'] + ' ' + data['average_cost_for_two']
+									o['url'] = data['url']
+									out.push(o)
+									cb(null)
+									//console.log(data['name']);
+									//console.log('{' + data['location']['address'] + '}');
+									//console.log('Cuisines: ' + data['cuisines']);
+									//console.log('Avg. for two: ' + data['currency'] + data['average_cost_for_two'] + ' (Price Range: ' + data['price_range'] + ')');
+									//
+									//	data['menu_url']
+									//	data['has_online_delivery']
+									//	data['is_delivering_now']
+									//	data['events_url']
+									//	data['user_rating']['aggregate_rating']
+									//	data['has_table_booking']
+									//
+								})
+								.catch( (error) => {
+									callback(error, null);
+								});
+
+								
+							}
+						});
+
+
+
+
+
+					}, (err) => {
+						if(!err){
+							callback(null, out)
+						}else{
+							console.log(err)
+						}
+					})
 					//console.log(data);
 					//console.log(data['restaurants'][0]);
-					data['restaurants'].forEach( (d, i) => {
-						if(i>2) return
-						let o = {};
-						d = d['restaurant'];
-						o['res_id'] = d['R']['res_id'];
-						o['name'] = d['name'];
-						//o['establishment_types'] = d['establishment_types'];
-						//console.log(o);
-						Extras().appendObject(o, d['cuisines'].split(', ')[0]); 
-					});
+					//data['restaurants'].forEach( (d, i) => {
+					//	if(i>2) return
+					//	let o = {};
+					//	d = d['restaurant'];
+					//	o['res_id'] = d['R']['res_id'];
+					//	o['name'] = d['name'];
+					//	//o['establishment_types'] = d['establishment_types'];
+					//	//console.log(o);
+					//	//Extras().appendObject(o, d['cuisines'].split(', ')[0]); 
+					//});
 					//console.log('Results Found: ' + data['results_found']);
 					// data['results_shown']
 					//
@@ -722,8 +785,8 @@ const Custom = () => ({
 */
 
 
-
-
+module.exports = Restaurant;
+/*
 
 
 Common('8c566e4798eca2737581bd3c21390711').cuisines(more = {city_id:'1', lat:'', lon:''}, (err, data) => {
@@ -736,11 +799,11 @@ Common('8c566e4798eca2737581bd3c21390711').cuisines(more = {city_id:'1', lat:'',
 	}
 });
 
+*/
 /*
-
-Restaurant('xxx').search({ entity_id : '0', entity_type : '', q : '',
-						start : '', count : '', lat : '28',
-						lon : '77', radius : '50000', cuisines : '', establishment_type : '',
-						collection_id : '', category : '', sort : 'rating', order : 'desc' });
+Restaurant().search({ entity_id : '1', entity_type : 'city', q : '',
+						start : '0', count : '10', lat : '28.592140',
+						lon : '77.046051', radius : '50000', cuisines : '148, 85, 40, 82', establishment_type : '16, 21, 1',
+						collection_id : '', category : '1, 2', sort : 'real_distance', order : 'desc' });
 
 */

@@ -48,16 +48,16 @@ mainWrapper.bing['search']({
 	}
 })
 */
-/*
-mainWrapper.food2fork['searchNRecipe']({'name': 'Chiken Biryani'}, (err, data) => {
+
+mainWrapper.food2fork['searchNRecipe']({'name': 'Biryani'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{
 		console.log(err, data)
 	}
 })
-*/
 
+/*
 mainWrapper.flipkart['search']({'searchQuery' : 'iPhone'}, (err, data) =>{
 	if(!err && data){
 		console.log(data)
@@ -67,6 +67,14 @@ mainWrapper.flipkart['search']({'searchQuery' : 'iPhone'}, (err, data) =>{
 })
 
 mainWrapper.Maps['geocoding']({'address':'NSIT, Dwarka More, New Delhi'}, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}else{
+		console.log(err, data)
+	}
+})
+*/
+mainWrapper.zomato['search']({'lat':'28.592140','lon':'77.046051'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{

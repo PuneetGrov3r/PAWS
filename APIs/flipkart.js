@@ -338,7 +338,7 @@ module.exports = Flipkart
 
 /*
 var a = new Flipkart()
-a.searchProduct({'searchQuery': 'moto x play'}, null, (err, data) => {
+a.searchProduct({'searchQuery': 'moto x play'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{
