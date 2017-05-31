@@ -21,10 +21,10 @@ exports.weather = {
 }
 
 exports.wiki = {
-	"defination": wk().getDefination(),
-	"url": wk().getURL(),  // takes name of article as argument same as getSummary
-	"locality": wk().getLocality(),
-	"summary": wk().getSummary()
+	"defination": wk().getDefination,
+	"url": wk().getURL,  // takes name of article as argument same as getSummary
+	"locality": wk().getLocality,
+	"summary": wk().getSummary
 }
 
 exports.markit = {
