@@ -191,7 +191,7 @@ const Wiki = () => ({
 		}
 		state.url += '?format=json&action=query&prop=extracts';
 		state.url += '&titles=' + more['word'];
-
+		let out = [{'title': more['word']}]
 		req(state, (er, re, b) => {
 			if(!er && re.statusCode === 200){
 				let p = new Promise( (resolve, reject) => {
@@ -211,7 +211,9 @@ const Wiki = () => ({
 							i--;
 						}
 					}
-					console.log(data);
+					//console.log(data);
+					out[0]['Definition'] = data
+					callback(null, out)
 				})
 				.catch( (err) => {
 					callback(err, null)
@@ -226,8 +228,8 @@ const Wiki = () => ({
 
 module.exports = Wiki
 
-/*
-Wiki().getDefination('cool', (err, data) => {
+
+Wiki().getDefinition({'word':'cool'}, (err, data) => {
 	if(err){
 		console.log(err);
 		return;
@@ -235,7 +237,7 @@ Wiki().getDefination('cool', (err, data) => {
 	console.log(data);
 });
 
-
+/*
 Wiki().getURL({'title':'mahatma gandhi'}, (err, data) => {
 	console.log(data)
 })
