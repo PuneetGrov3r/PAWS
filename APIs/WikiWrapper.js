@@ -211,7 +211,6 @@ const Wiki = () => ({
 							i--;
 						}
 					}
-					//console.log(data);
 					let p1 = new Promise((resolve, reject) => {
 						resolve(out[0]['Definition'] = data.join('\n'))
 					});
@@ -233,6 +232,7 @@ const Wiki = () => ({
 
 module.exports = Wiki
 
+/*
 
 Wiki().getDefinition({'word':'cool'}, (err, data) => {
 	if(err){
@@ -242,7 +242,6 @@ Wiki().getDefinition({'word':'cool'}, (err, data) => {
 	console.log(data);
 });
 
-/*
 Wiki().getURL({'title':'mahatma gandhi'}, (err, data) => {
 	console.log(data)
 })
