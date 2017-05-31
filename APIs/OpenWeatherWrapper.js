@@ -64,6 +64,7 @@ const Weather = () => ({
 					
 					out['location'] = data['city']['name'] + ', ' + data['city']['country']
 					data['list'].forEach( function(el, index) {
+						console.log(el)
 						let obj = {}
 						obj['title'] = new Date(el['dt']*1000).toDateString()
 						obj['image_url'] = 'http://openweathermap.org/img/w/' + el['weather'][0]['icon'] + '.png'
@@ -91,7 +92,6 @@ const Weather = () => ({
 
 module.exports = Weather
 
-/*
 var more= {'lat':'28.612205', 'lon':'77.034980'}
 
 Weather().forecast(more, (err, data) => {
@@ -100,6 +100,7 @@ Weather().forecast(more, (err, data) => {
 	}
 })
 
+/*
 Weather().currentWeather(more, (err, data) => {
 	if(!err && data){
 		console.log(data)
@@ -107,5 +108,4 @@ Weather().currentWeather(more, (err, data) => {
 		console.log(data, err)
 	}
 });
-
 */

@@ -125,16 +125,16 @@ Flipkart.prototype.searchProduct = function(searchObject,filter,callback)
 		},
 		method : "GET"
 	}
-	console.log(url);
+	//console.log(url);
 	request(reqOpts,function(err,response,body){
 		if(err)callback(err,null);
 		else 
 		{
 			parseFlipkartResult(body,searchObject["searchQuery"],function(arrayOfProducts,resultsFor){
-				callback(null,{
+				callback(null,/*{
 					"heading":"Search Results for "+resultsFor,
 					"value":arrayOfProducts
-				});
+				}*/ arrayOfProducts);
 			});
 		}
 	});
@@ -308,9 +308,9 @@ function parseFlipkartResult(jsonString,resultsFor,cb)
 		var fullProductInfo = item["productBaseInfoV1"];
 		var costString = '\nFlipkart Price : '+fullProductInfo["flipkartSellingPrice"]['amount'].toString()+' INR\nMRP : '+fullProductInfo["maximumRetailPrice"]['amount'].toString()+' INR';
 		var temp = {
-			name : fullProductInfo["title"],
-			image_small : fullProductInfo["imageUrls"]["200x200"],
-			image_large :fullProductInfo["imageUrls"]["400x400"],
+			title : fullProductInfo["title"],
+			//image_small : fullProductInfo["imageUrls"]["200x200"],
+			image_url :fullProductInfo["imageUrls"]["400x400"],
 			cost : costString,
 			description:fullProductInfo["productDescription"],
 			url : fullProductInfo["productUrl"],
@@ -336,12 +336,13 @@ function parseFlipkartResult(jsonString,resultsFor,cb)
 module.exports = Flipkart
 
 
-
+/*
 var a = new Flipkart()
-a.searchProduct({'searchQuery': 'moto x play'}, (err, data) => {
+a.searchProduct({'searchQuery': 'moto x play'}, null, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{
 		console.log(err, data)
 	}
 })
+*/
