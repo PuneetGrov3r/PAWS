@@ -2,6 +2,7 @@ var request = require('request');
 var async = require('async')
 var prettyjson = require('prettyjson');
 
+
 //Mapping the categories of bing news to available context
 var categoryMappingObject = {
 	"work":["Business"],
@@ -18,21 +19,21 @@ var categoryMappingObject = {
 
 //Main object to be imported
 //The object is initialized with the api key
-function BingNews(apiKey)
+function BingNews()
 {
-	this.apiKey = apiKey;
 }
 
 //Gets the news articles of a particular category
 BingNews.prototype.categoryNews = function(searchObject,filter,callback)
 {
+	const apiKey = 'b8e423fccc404adbbae199edef01d6ab'
 	//REST api end point for getting category news
-	var url = "https://api.cognitive.microsoft.com/bing/v5.0/news/";
+	var url = "https://api.cognitive.microsoft.com/bing/v7.0/news/";
 	//Assigning the http request properties to an object
 	var reqOpts = {
 		url:url,
 		headers:{
-			"Ocp-Apim-Subscription-Key":this.apiKey
+			"Ocp-Apim-Subscription-Key":apiKey
 		},
 		qs:
 		{
@@ -62,6 +63,7 @@ BingNews.prototype.categoryNews = function(searchObject,filter,callback)
 //Search news articles
 BingNews.prototype.searchNews = function(searchObject,filter,callback)
 {
+	const apiKey = 'b8e423fccc404adbbae199edef01d6ab'
 	//Checking if the required condition for filters are met
 	if(searchObject['searchQuery'] == undefined)
 	{
@@ -69,12 +71,12 @@ BingNews.prototype.searchNews = function(searchObject,filter,callback)
 		return;	
 	}
 	//The api end point for news search 
-	var url = "https://api.cognitive.microsoft.com/bing/v5.0/news/search";
+	var url = "https://api.cognitive.microsoft.com/bing/v7.0/news/search";
 	//Assigning various properties to the http request
 	var reqOpts = {
 		url:url,
 		headers:{
-			"Ocp-Apim-Subscription-Key":this.apiKey
+			"Ocp-Apim-Subscription-Key":apiKey
 		},
 		qs:
 		{
@@ -167,3 +169,5 @@ function categoryNewsParser(body,callback)
 
 
 module.exports = BingNews;
+
+

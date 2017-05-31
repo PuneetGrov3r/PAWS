@@ -1,10 +1,10 @@
 'use strict'
 
 const request = require('request');
+const key = 'xxx'
 
 
-
-const Maps = (key) => ({
+const Maps = () => ({
 	places: (more={lat:'',lon:'',radius:'',type:'',name:''}, callback) => {
 		let state = {
 			method: 'GET',
