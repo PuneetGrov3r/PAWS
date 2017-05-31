@@ -5,13 +5,13 @@ const req = require('request');
 
 
 const Weather = () => ({
-	currentWeather: (more = {lat : '28.612205', lon : '77.034980'}, callback) => {
+	currentWeather: (more = {'lat' : '28.612205', 'lon' : '77.034980'}, callback) => {
 		const key = 'fd69a8bec4fb9cd33f7a1cf60f4871eb'
 		const state = {
 			method: 'GET',
 			url: 'http://api.openweathermap.org/data/2.5/weather'
 		}
-		state.url += '?lat=' + more.lat + '&lon=' + more.lon + '&APPID=' + key;
+		state.url += '?lat=' + more['lat'] + '&lon=' + more['lon'] + '&APPID=' + key;
 		let out = {};
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
@@ -20,7 +20,7 @@ const Weather = () => ({
 				});
 				p.then( (data) => {
 					//console.log(data)
-					out['location'] = data['name'].toString() + ', ' + data['sys']['counntry'].toString()
+					if(data['sys']['counntry'] && data['name'])out['location'] = data['name'].toString() + ', ' + data['sys']['counntry'].toString()
 					out['main'] = data['weather'][0]['main']
 					out['temp'] = data['main']['temp']
 					out['pressure'] = data['main']['pressure']
@@ -30,8 +30,8 @@ const Weather = () => ({
 					out['visibility'] = data['visibility']
 					out['wind'] = data['wind']['speed']
 					out['clouds'] = data['clouds']['all']
-					console.log(out);
 					callback(null, out);
+					//console.log(out);
 				})
 				.catch( (error) => {
 					callback(error, null);
@@ -42,13 +42,13 @@ const Weather = () => ({
 		})
 	},
 
-	forecast: (more = {lat : '28.612205', lon : '77.034980'}, callback) => {
+	forecast: (more = {'lat' : '28.612205', 'lon' : '77.034980'}, callback) => {
 		const key = 'fd69a8bec4fb9cd33f7a1cf60f4871eb'
 		const state = {
 			method: 'GET',
 			url: 'http://api.openweathermap.org/data/2.5/forecast/daily'
 		}
-		state.url += '?lat=' + more.lat + '&lon=' + more.lon + '&APPID=' + key;
+		state.url += '?lat=' + more['lat'] + '&lon=' + more['lon'] + '&APPID=' + key;
 		let out = {'list':[]};
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
@@ -83,15 +83,19 @@ const Weather = () => ({
 
 
 module.exports = Weather
-//var more= {lat:'28.612205', lon:'77.034980'}
-//Weather('xxx').forecast(more, (err, data) => {
-//	if(!err && data){
-//		console.log(data)
-//	}
-//})
+var more= {'lat':'28.612205', 'lon':'77.034980'}
+/*
+Weather().forecast(more, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}
+})
+*/
+Weather().currentWeather(more, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}else{
+		console.log(data, err)
+	}
+});
 
-//Weather('219cda475ab3a9c0a17abe166b25a239').currentWeather(more, (err, data) => {
-//	if(!err && data){
-//		console.log(data)
-//	}
-//});
