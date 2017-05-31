@@ -30,8 +30,6 @@ const Weather = () => ({
 					out['visibility'] = data['visibility']
 					out['wind'] = data['wind']['speed']
 					out['clouds'] = data['clouds']['all']
-					out['name'] = data["name"]
-					out['icon'] = data["weather"][0]['icon']
 					callback(null, out);
 					//console.log(out);
 				})
@@ -85,8 +83,10 @@ const Weather = () => ({
 
 
 module.exports = Weather
-var more= {'lat':'28.612205', 'lon':'77.034980'}
+
 /*
+var more= {'lat':'28.612205', 'lon':'77.034980'}
+
 Weather().forecast(more, (err, data) => {
 	if(!err && data){
 		console.log(data)

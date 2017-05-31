@@ -24,11 +24,11 @@ function BingNews()
 }
 
 //Gets the news articles of a particular category
-BingNews.prototype.categoryNews = function(searchObject,filter,callback)
+BingNews.prototype.categoryNews = function(more={'searchObject': {},'filter': '' },callback)
 {
-	const apiKey = 'b8e423fccc404adbbae199edef01d6ab'
+	const apiKey = '⁠⁠⁠a528bdf5e4b64ef79d7355fdfead5ec2'
 	//REST api end point for getting category news
-	var url = "https://api.cognitive.microsoft.com/bing/v7.0/news/";
+	var url = "https://api.cognitive.microsoft.com/bing/v5.0/news/";
 	//Assigning the http request properties to an object
 	var reqOpts = {
 		url:url,
@@ -37,7 +37,7 @@ BingNews.prototype.categoryNews = function(searchObject,filter,callback)
 		},
 		qs:
 		{
-			"category":searchObject["category"]
+			"category":more['searchObject']["category"]
 		},
 		method:"GET"
 	}
@@ -52,7 +52,7 @@ BingNews.prototype.categoryNews = function(searchObject,filter,callback)
 				//console.log(result);
 				callback(null,
 				{
-					"heading":"Category News for "+searchObject["category"],
+					"heading":"Category News for "+more['searchObject']["category"],
 					"value":result
 				});
 			});
@@ -61,43 +61,44 @@ BingNews.prototype.categoryNews = function(searchObject,filter,callback)
 }
 
 //Search news articles
-BingNews.prototype.searchNews = function(searchObject,filter,callback)
+BingNews.prototype.searchNews = function(more= {'searchObject': {},'filter': ''},callback)
 {
-	const apiKey = 'b8e423fccc404adbbae199edef01d6ab'
+	const apiKey = '⁠⁠⁠a528bdf5e4b64ef79d7355fdfead5ec2'
 	//Checking if the required condition for filters are met
-	if(searchObject['searchQuery'] == undefined)
+	if(more['searchObject']['searchQuery'] === undefined)
 	{
 		callback(new Error("Search string not provided"),null);
 		return;	
 	}
 	//The api end point for news search 
-	var url = "https://api.cognitive.microsoft.com/bing/v7.0/news/search";
+	var url = "https://api.cognitive.microsoft.com/bing/v5.0/news/search";
 	//Assigning various properties to the http request
 	var reqOpts = {
 		url:url,
-		headers:{
-			"Ocp-Apim-Subscription-Key":apiKey
-		},
+		headers:[{
+			name:'Ocp-Apim-Subscription-Key',
+			value: apiKey
+		}],
 		qs:
 		{
-			"q":searchObject["searchQuery"],
+			"q":more['searchObject']["searchQuery"],
 		},
 		method:"GET"
 	}
-	if(searchObject["count"]!=undefined)reqOpts["qs"]["count"] = searchObject["count"];
-	if(searchObject["offset"]!=undefined)reqOpts["qs"]["offset"] = searchObject["offset"];
-	if(searchObject["market"]!=undefined)reqOpts["qs"]["mkt"] = searchObject["market"];
-	if(searchObject["safeSearch"]!=undefined)reqOpts["qs"]["safeSearch"] = searchObject["safeSearch"];
-	console.log(reqOpts);
+	if(more['searchObject']["count"] && more['searchObject']["count"].length !== 0) reqOpts.qs["count"] = more['searchObject']["count"];
+	if(more['searchObject']["offset"] && more['searchObject']["offset"].length !== 0) reqOpts.qs["offset"] = more['searchObject']["offset"];
+	if(more['searchObject']["market"] && more['searchObject']["market"].length !== 0) reqOpts.qs["mkt"] = more['searchObject']["market"];
+	if(more['searchObject']["safeSearch"] && more['searchObject']["safeSearch"].length !== 0) reqOpts.qs["safeSearch"] = more['searchObject']["safeSearch"];
+	//console.log(reqOpts);
 	request(reqOpts,function(err,response,body){
 		if(err)callback(err,null);
-		else
+		else if (response.statusCode === 200)
 		{
 			//The result is parsed to a standard format for displaying to the frontend
 			categoryNewsParser(body,function(result){	
 				callback(null,
 				{
-					"heading":"Search result for "+searchObject["searchQuery"],
+					"heading":"Search result for "+more['searchObject']["searchQuery"],
 					"value":result
 				});
 			});
@@ -107,9 +108,9 @@ BingNews.prototype.searchNews = function(searchObject,filter,callback)
 }
 
 //Function for displaying various categories to the users according to the context chosen
-BingNews.prototype.subFunctionContextToCategory = function(object,filter,callback)
+BingNews.prototype.subFunctionContextToCategory = function(more={'object': {},'filter': ''},callback)
 {
-	var contextArr = object.context.split('_');
+	var contextArr = more['object'].context.split('_');
 	var resultArray = [];
 	var result = [];
 	async.each(contextArr,function(item1,cb){
@@ -170,4 +171,19 @@ function categoryNewsParser(body,callback)
 
 module.exports = BingNews;
 
-
+/*
+var a = new BingNews()
+a.searchNews({'searchObject': {
+	'searchQuery': 'Today\'s News',
+	'count': 10,
+	'offset': 0,
+	'market': 'en-in',
+	'safeSearch': 'Moderate'
+}}, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}else{
+		console.log(err, data)
+	}
+})
+*/

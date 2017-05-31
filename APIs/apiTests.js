@@ -16,8 +16,8 @@ Wiki().getURL('Mahatma Gandhi',(err,data)=>{
 	console.log(data)
 });
 */
-
-mainWrapper["food2fork"]['search']({'name':'Butter Chicken'}, (err, data) => {
+/*
+mainWrapper.food2fork['search']({'name':'Butter Chicken'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{
@@ -25,22 +25,28 @@ mainWrapper["food2fork"]['search']({'name':'Butter Chicken'}, (err, data) => {
 	}
 })
 
-mainWrapper.Wikipedia['summary']({'title': 'India Gate'}, (err, data) => {
+mainWrapper.wiki['summary']({'title': 'India Gate'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{
 		console.log(err, data)
 	}
-})
-mainWrapper.Wikipedia['defination']({'word': 'Water'}, (err, data) => {
+})	
+*/
+newsQuery = ['financial markets', 'hollywood updates', 'science updates', 'top stories', 'world news']
+
+mainWrapper.bing['search']({
+	'searchObject': {
+		'searchQuery': 'world news',   //Fuzzy here
+		'count': '10',
+		'offset': '0',
+		'market': 'en-us',
+		'safeSearch': 'Moderate'
+		}
+}, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{
 		console.log(err, data)
 	}
-})
-
-mainWrapper["open_weather"]["current"]({'lat' : '13.0827','lon': '80.2707'},(err,data)=>{
-	console.log(data)
-
 })
