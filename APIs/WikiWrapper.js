@@ -212,8 +212,13 @@ const Wiki = () => ({
 						}
 					}
 					//console.log(data);
-					out[0]['Definition'] = data.join('\n')
-					callback(null, out)
+					let p1 = new Promise((resolve, reject) => {
+						resolve(out[0]['Definition'] = data.join('\n'))
+					});
+					p1.then( (data) => {
+						callback(null, out)
+					})
+					
 				})
 				.catch( (err) => {
 					callback(err, null)
