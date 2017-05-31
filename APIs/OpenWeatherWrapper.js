@@ -12,7 +12,7 @@ const Weather = () => ({
 			url: 'http://api.openweathermap.org/data/2.5/weather'
 		}
 		state.url += '?lat=' + more['lat'] + '&lon=' + more['lon'] + '&APPID=' + key;
-		let out = {};
+		let o = [];
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
@@ -20,6 +20,7 @@ const Weather = () => ({
 				});
 				p.then( (data) => {
 					//console.log(data)
+					let out = {}
 					out['image_url'] = 'http://openweathermap.org/img/w/' + data['weather'][0]['icon'] + '.png'
 					if(data['sys']['country']){
 						out['title'] = data['name'] + ', ' + data['sys']['country']
@@ -33,7 +34,8 @@ const Weather = () => ({
 					out['visibility'] = data['visibility']
 					out['wind'] = data['wind']['speed']
 					out['clouds'] = data['clouds']['all']
-					callback(null, out);
+					o.push(out);
+					callback(null, o);
 					//console.log(out);
 				})
 				.catch( (error) => {
@@ -52,7 +54,7 @@ const Weather = () => ({
 			url: 'http://api.openweathermap.org/data/2.5/forecast/daily'
 		}
 		state.url += '?lat=' + more['lat'] + '&lon=' + more['lon'] + '&APPID=' + key;
-		let out = {'list':[]};
+		let out = [];
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
@@ -63,7 +65,7 @@ const Weather = () => ({
 					out['location'] = data['city']['name'] + ', ' + data['city']['country']
 					data['list'].forEach( function(el, index) {
 						let obj = {}
-						obj['date'] = new Date(el['dt']*1000).toDateString()
+						obj['title'] = new Date(el['dt']*1000).toDateString()
 						obj['image_url'] = 'http://openweathermap.org/img/w/' + el['weather'][0]['icon'] + '.png'
 						obj['pressure'] = el['pressure']
 						obj['humidity'] = el['humidity']
@@ -72,7 +74,7 @@ const Weather = () => ({
 						if(el['rain']) obj['rain'] = el['rain']
 						obj['temp_min'] = el['temp']['min']
 						obj['temp_max'] = el['temp']['max']
-						out['list'].push(obj)
+						out.push(obj)
 					});
 					callback(null, out)
 				})
@@ -89,7 +91,7 @@ const Weather = () => ({
 
 module.exports = Weather
 
-/*
+
 var more= {'lat':'28.612205', 'lon':'77.034980'}
 
 Weather().forecast(more, (err, data) => {
@@ -106,4 +108,3 @@ Weather().currentWeather(more, (err, data) => {
 	}
 });
 
-*/

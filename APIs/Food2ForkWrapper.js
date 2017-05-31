@@ -138,8 +138,8 @@ const Food = () => ({
 module.exports = Food
 
 
-
 /*
+
 Food().searchNRecipe({'name':'chicken biryani'}, (err, data) => {
 	if(!err && data){
 		console.log(data)

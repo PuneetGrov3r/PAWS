@@ -27,7 +27,8 @@ const Wiki = () => ({
 
 		}, (err) => {
 			if(!err){
-				state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';  
+				let out = [{}]
+				state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';
 				state.url += '&titles=' + str;
 				console.log(str)
 				req(state, (err, res, body) => {
@@ -37,9 +38,9 @@ const Wiki = () => ({
 							resolve(JSON.parse(body)['query']['pages']);
 						});
 						p.then( (data) => {
-							console.log(data)
+							//console.log(data)
 							//Wiki().getURL(Object.keys(data)[0], callback)
-							callback(null, data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));
+							return data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));
 						})
 						.catch( (error) => {
 							callback(err, null);
@@ -190,7 +191,6 @@ const Wiki = () => ({
 					console.log(data);
 				})
 				.catch( (err) => {
-					assert.isNotOk(error,'Promise error');
 					callback(err, null)
 				})
 			}else {

@@ -85,8 +85,12 @@ const Markit = () => ({
 
 module.exports = Markit
 
-/*
+
 Markit().lookupNPrice('Apple', (err, data) => {
-	console.log(data);
+	if(!err){
+		console.log(data);	
+	}else{
+		console.log(err)
+	}
+
 });
-*/
