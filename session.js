@@ -87,7 +87,6 @@ function session(sessionId,latitude,longitude){
 
 
 			case "companyDisambiguation":
-				console.log("Company disamb")
 				//Check if single word or a sentence
 				/*fuzzyCheckOptions(currentClass["companies"],message,"function",(isPresent,matchedObject)=>{
 					console.log("isPresent", isPresent,matchedObject)
@@ -202,7 +201,6 @@ function session(sessionId,latitude,longitude){
 				break
 
 			case "serviceDisambiguation":
-				console.log("inside service disamb")
 				
 				
 				let isWord = message.split(" ").length<=1
@@ -291,7 +289,7 @@ function session(sessionId,latitude,longitude){
 									currentClass.currentStage = "parameterFilling"
 									currentClass["parameterFilling"](currentClass,currentClass.prevCallback)
 								}
-								else
+								else 
 								{
 									currentClass.mainCallback({
 										callNext:false,
@@ -395,7 +393,7 @@ function session(sessionId,latitude,longitude){
 					});	
 				}
 
-				else
+				else if(results.length == 1)
 				{
 					currentClass.currentStage = "serviceFinder"
 					currentClass.companies.push({
@@ -453,6 +451,7 @@ function session(sessionId,latitude,longitude){
 				});
 			
 			},(err,results)=>{
+				currentClass.Services = []
 				if(results.length == 0){
 					currentClass.currentService = arrayOfNodes
 					currentClass.mainCallback({callNext:false,
@@ -474,7 +473,6 @@ function session(sessionId,latitude,longitude){
 
 					console.log("this is called twice")
 					currentClass.currentStage = "parameterFilling"
-					currentClass.Services = []
 					currentClass.Services.push({
 							"id":results[0]["id"],
 							"company":results[0]["company"],
