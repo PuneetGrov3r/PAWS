@@ -1,11 +1,12 @@
 'use strict'
 
 const req = require('request');
+const key = 'xxx'
 
-
-const Food = (key) => ({
+const Food = () => ({
 
 	search: (name, callback) => {
+		
 		let state = {
 			method: 'GET',
 			url: 'http://food2fork.com/api/search'

@@ -1,6 +1,7 @@
 'use strict'
 
 const req = require('request');
+const assert = require('assert');
 
 const Wiki = () => ({
 	getSummary: (title, callback) => {
@@ -19,11 +20,13 @@ const Wiki = () => ({
 					resolve(JSON.parse(body)['query']['pages']);
 				});
 				p.then( (data) => {
+					console.log(data)
 					//Wiki().getURL(Object.keys(data)[0], callback)
-					callback(null, data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));	// Yeah!
+					callback(null, data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));
 				})
 				.catch( (error) => {
-					callback(err, null);
+					assert.isNotOk(error,'Promise error');
+					//callback(err, null);
 				});
 			}
 			else if(err){
@@ -165,6 +168,7 @@ const Wiki = () => ({
 					console.log(data);
 				})
 				.catch( (err) => {
+					assert.isNotOk(error,'Promise error');
 					callback(err, null)
 				})
 			}else {
@@ -176,8 +180,8 @@ const Wiki = () => ({
 
 
 module.exports = Wiki
-/*
 
+/*
 Wiki().getDefination('cool', (err, data) => {
 	if(err){
 		console.log(err);

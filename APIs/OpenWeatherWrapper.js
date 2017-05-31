@@ -2,8 +2,9 @@
 
 
 const req = require('request');
+const key = 'xxx'
 
-const Weather = (key) => ({
+const Weather = () => ({
 	currentWeather: (more = {lat : '28.612205', lon : '77.034980'}, callback) => {
 		const state = {
 			method: 'GET',

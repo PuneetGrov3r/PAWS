@@ -9,11 +9,11 @@ let mainWrapper = require('./MainWrapper.js')
 	console.log(prettyjson.render(data))
 })
 */
-Wiki().getSummary('water',(err,data)=>{
-	console.log(prettyjson.render(data))
-})
-
-
-mainWrapper["weather"]["current"]({lat : '28.612205', lon : '77.034980'},(err,data)=>{
+Wiki().getURL('Mahatma Gandhi',(err,data)=>{
 	console.log(data)
 })
+
+
+//mainWrapper["weather"]["current"]({lat : '28.612205', lon : '77.034980'},(err,data)=>{
+//	console.log(data)
+//})
