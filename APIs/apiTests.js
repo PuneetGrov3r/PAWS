@@ -33,6 +33,13 @@ mainWrapper.wiki['summary']({'title': 'India Gate'}, (err, data) => {
 	}
 })	
 */
+mainWrapper.Wikipedia['definition']({'word':'cool'}, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}else{
+		console.log(err, data)
+	}
+})
 newsQuery = ['financial markets', 'hollywood updates', 'science updates', 'top stories', 'world news']
 
 mainWrapper.bing['search']({
