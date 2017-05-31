@@ -7,6 +7,7 @@ const bw = require('./bing_news.js');
 const bnw = new bw();
 const fp = require('./flipkart.js');
 const fpk = new fp();
+const maps = require('./MapsAPIWrapper.js');
 
 //done
 exports.food2fork = {
@@ -48,4 +49,8 @@ exports.bing = {
 
 exports.flipkart = {
 	"search": fpk.searchProduct
+}
+
+exports.Maps = {
+	'geocoding': maps().geocoding
 }

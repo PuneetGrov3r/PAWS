@@ -18,7 +18,7 @@ const Maps = () => ({
 		state.url += '&key=' + key
 		//
 		//
-		let out = {'places':[]}
+		let out = []
 		//
 		//
 		request(state, (err, res, body) => {
@@ -41,14 +41,14 @@ const Maps = () => ({
 						obj['address'] = data[i]['vicinity']
 						obj['rating'] = data[i]['rating']
 						obj['types'] = data[i]['types']
-						out['places'].push(obj)
+						out.push(obj)
 					}
 					}catch(err){
 						console.log(err)
 					}
 				})
 				.then( (data) =>{
-					callback(null, data['places'])
+					callback(null, data)
 				})
 				.catch( (error) => {
 					callback(error, null)
@@ -73,7 +73,7 @@ const Maps = () => ({
 			state.url += '&mode=driving'
 		}
 		state.url += '&key=' + key
-		var out ={'steps':[]}
+		var out = []
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
@@ -112,17 +112,16 @@ const Maps = () => ({
 		}
 		state.url += more['address']
 		state.url += '&key=' + key
-		var out =[]
 		request(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
 					resolve(JSON.parse(body)['results'][0]);
 				});
 				p.then( (data) => {
-					console.log(data)
-				})
-				.then( (data) => {
-					callback(null, out)
+					let obj = {}
+					obj['lat'] = data['geometry']['location']['lat']
+					obj['lon'] = data['geometry']['location']['lng']
+					callback(null, obj)
 				})
 				.catch( (error) => {
 					console.log(error);
@@ -134,7 +133,7 @@ const Maps = () => ({
 });
 
 module.exports = Maps
-
+/*
 Maps().geocoding({'address':'Dwarka Mor, Delhi'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
@@ -142,5 +141,6 @@ Maps().geocoding({'address':'Dwarka Mor, Delhi'}, (err, data) => {
 		console.log(err, data)
 	}
 })
+*/
 //Maps('xxx').places(more={lat:'28.592140',lon:'77.046051',radius:'50000',type:'place',name:'India Gate'})
 //Maps('xxx').direction(more={origin:'Dwarka Mor, Delhi, India', destination:'Dwarka Sector 4, Delhi, India', mode:'driving'})

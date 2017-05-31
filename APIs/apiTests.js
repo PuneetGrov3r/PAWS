@@ -65,3 +65,11 @@ mainWrapper.flipkart['search']({'searchQuery' : 'iPhone'}, (err, data) =>{
 		console.log(err, data)
 	}
 })
+
+mainWrapper.Maps['geocoding']({'address':'NSIT, Dwarka More, New Delhi'}, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}else{
+		console.log(err, data)
+	}
+})
