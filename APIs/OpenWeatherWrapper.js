@@ -2,7 +2,7 @@
 
 
 const req = require('request');
-const key = 'xxx'
+const key = 'fd69a8bec4fb9cd33f7a1cf60f4871eb'
 
 const Weather = () => ({
 	currentWeather: (more = {lat : '28.612205', lon : '77.034980'}, callback) => {
