@@ -371,6 +371,7 @@ function session(sessionId,latitude,longitude){
 				});
 			
 			},(err,results)=>{
+				currentClass.companies = []
 				if(results.length == 0)
 					currentClass.mainCallback({callNext:false,message:"No service found",type:"initialQuery"},callback)
 
@@ -452,7 +453,7 @@ function session(sessionId,latitude,longitude){
 				});
 			
 			},(err,results)=>{
-
+				currentClass.Services = []
 				if(results.length == 0){
 					currentClass.currentService = arrayOfNodes
 					currentClass.mainCallback({callNext:false,
@@ -463,7 +464,7 @@ function session(sessionId,latitude,longitude){
 				else if(results.length > 1)
 				{
 					console.log("this is called once")
-					currentService = results
+					currentClass.currentService = results
 					currentClass.mainCallback({callNext:false,
 						message:serviceDisambiguationMessageCreator(currentClass.Services),
 						type:"serviceDisambiguation"})
@@ -471,6 +472,7 @@ function session(sessionId,latitude,longitude){
 
 				else
 				{
+
 					console.log("this is called twice")
 					currentClass.currentStage = "parameterFilling"
 					currentClass.Services.push({
