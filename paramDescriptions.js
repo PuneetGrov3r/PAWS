@@ -1,11 +1,17 @@
 exports.open_weather = {
 	"current":{
-		"latitude":null,
-		"longitude":null
 	},
 	"forecast":{
-		"latitude":null,
-		"longitude":null
 	}
+}
+exports.Wikipedia ={
+	"summary":{
+		"title":null
+	},
+	"definition":{
+		"word":null
+	}
+
+
 }
 

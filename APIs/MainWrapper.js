@@ -17,14 +17,14 @@ exports.maps = {
 	"direction":mp().direction
 }
 
-exports.weather = {
+exports.open_weather = {
 	"current": ow().currentWeather,
 	"forecast": ow().forecast
 }
 
 
-exports.wiki = {
-	"defination": wk().getDefination,
+exports.Wikipedia = {
+	"definition": wk().getDefination,
 	"url": wk().getURL,  // takes name of article as argument same as getSummary
 	"locality": wk().getLocality,
 	"summary": wk().getSummary

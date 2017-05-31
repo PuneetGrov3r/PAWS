@@ -16,6 +16,7 @@ const Wiki = () => ({
 		state.url += '&titles=' + more['title'];
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
+				console.log("wikifunction")
 				let p = new Promise((resolve, reject) => {
 					resolve(JSON.parse(body)['query']['pages']);
 				});

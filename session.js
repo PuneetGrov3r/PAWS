@@ -4,7 +4,7 @@ let neo4jDriver = require('./neo4jDriver.js')
 
 let nlParser = new pyInt.pythonIntegrate()
 let paramDescription = require('./paramDescriptions.js')
-
+let mainWrapper = require('./APIs/MainWrapper.js')
 
 function session(sessionId,latitude,longitude){
 
@@ -39,9 +39,11 @@ function session(sessionId,latitude,longitude){
 
 	this.Services = []
 
+
+	//Parameter filling 
 	this.paramRequired = {}
 	this.parameterBringFilled = {}
-
+	this.isParameterFilled = true
 
 	this.currentFillingParameter = ""
 
@@ -87,10 +89,10 @@ function session(sessionId,latitude,longitude){
 			case "companyDisambiguation":
 				console.log("Company disamb")
 				//Check if single word or a sentence
-				fuzzyCheckOptions(currentClass["companies"],message,"function",(isPresent,matchedObject)=>{
+				/*fuzzyCheckOptions(currentClass["companies"],message,"function",(isPresent,matchedObject)=>{
 					console.log("isPresent", isPresent,matchedObject)
 				})
-
+*/
 
 
 				let isAWord = message.split(" ").length<=1
@@ -304,25 +306,38 @@ function session(sessionId,latitude,longitude){
 
 				}
 
-
-
 				break
 
 			case "parameterFilling":
-				break
-
+			console.log("parameter filling")
+			currentClass.paramRequired[currentClass.currentFillingParameter] = message
+			for (i in currentClass.paramRequired)
+			{
+				console.log("in paramfilling2")
+				console.log(i)
+				if(!currentClass.paramRequired[i]){
+					currentClass.currentFillingParameter = i
+					currentClass.isParameterFilled = false
+					break
+				}
+				else
+				{
+					currentClass.isParameterFilled = true
+				}
+			}
+			if(!currentClass.isParameterFilled)
+			{
+				currentClass.mainCallback({callNext:false,
+					message:parameterFillingMessageCreator(currentClass),
+					type:"parameterFilling"
+				})
+			}
+			else {
+				currentClass.currentStage = "getResult"
+				currentClass["getResult"](currentClass)
+			}
 		}
-
-
-		
-
-		
-		
 	}
-
-
-
-
 
 	//Various stages
 	this.rootFinder = function(currentClass,callback){
@@ -415,7 +430,7 @@ function session(sessionId,latitude,longitude){
 			if(arrayOfNodes.length == 1)
 			{
 				currentClass.Services = [arrayOfNodes[0]]
-				callback({callNext:true,message:"Service Found",type:"parameterFilling"},callback)
+				currentClass["parameterFilling"](currentClass,currentClass.prevCallback)
 			}
 
 
@@ -466,21 +481,11 @@ function session(sessionId,latitude,longitude){
 					})
 					currentClass["parameterFilling"](currentClass,currentClass.prevCallback)
 				}
-			})
-
+			});
 
 			}
 
-
-
-
-
 		});
-
-
-
-		
-
 
 	}
 	this.parameterFilling = function(currentClass,callback)
@@ -489,18 +494,60 @@ function session(sessionId,latitude,longitude){
 		let apiCompany = currentClass["companies"][0]["company"]
 		let apiServiceName = currentClass["Services"][0]["serviceName"]
 		currentClass.paramRequired = paramDescription[apiCompany][apiServiceName]
+		for(i in currentClass.paramRequired)
+		{
+			currentClass.paramRequired[i] = null
+		}
+		currentClass.paramRequired["lat"] = this.latitude
+		currentClass.paramRequired["lon"] = this.longitude
+		
 		console.log(currentClass.paramRequired)
 
 
+		for (i in currentClass.paramRequired)
+		{
+			console.log("in paramfilling")
+			console.log(i)
+			if(!currentClass.paramRequired[i]){
+				currentClass.currentFillingParameter = i
+				currentClass.isParameterFilled = false
+				break
+			}
+			else
+			{
+				currentClass.isParameterFilled = true
+			}
 
-
-
-		currentClass.mainCallback({callNext:false,message:currentClass.Services[0]["serviceName"],type:"parameterFilling"})
+		}
+		if(!currentClass.isParameterFilled)
+		{
+			currentClass.mainCallback({callNext:false,
+				message:parameterFillingMessageCreator(currentClass),
+				type:"parameterFilling"
+			})
+		}
+		else {
+			currentClass.currentStage = "getResult"
+			currentClass["getResult"](currentClass)
+		}
+		
 	}
 
-	this.getResult = function(){
+	this.getResult = function(currentClass){
 
+		console.log("inside result display")
+		console.log(currentClass.paramRequired)
+		console.log(currentClass.companies[0]["company"])
+		console.log(currentClass.Services[0]["serviceName"])
+		mainWrapper[currentClass.companies[0]["company"]][currentClass.Services[0]["serviceName"]](currentClass["paramRequired"],(err,data)=>{
+			console.log("finding the result")
+			currentClass.mainCallback({callNext:false,
+				message:JSON.stringify(data),
+				type:"result"
+			})	
+		})
 
+		
 	}
 
 
@@ -587,6 +634,11 @@ function serviceDisambiguationMessageCreator(services)
 
 
 
+function parameterFillingMessageCreator(currentClass)
+{
+	return "Please fill the option for "+currentClass.currentFillingParameter
+}
+
 function fuzzyCheckOptions(nodeObjects,message,forName,callback){
 	let arrayOfStrings = []
 	async.each(nodeObjects,(item,cb1)=>{
@@ -598,17 +650,11 @@ function fuzzyCheckOptions(nodeObjects,message,forName,callback){
 			nlParser.fuzzy([message,arrayOfStrings],(err,data)=>{
 				
 				console.log(data)
-				
-				
-
-				
 				callback(true,{})
 			})
 
 		}
 	})
-
-
 
 }
 

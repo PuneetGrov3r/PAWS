@@ -17,7 +17,7 @@ Wiki().getURL('Mahatma Gandhi',(err,data)=>{
 });
 */
 
-mainWrapper.food2fork['search']({'name':'Butter Chicken'}, (err, data) => {
+mainWrapper["food2fork"]['search']({'name':'Butter Chicken'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{
@@ -25,10 +25,22 @@ mainWrapper.food2fork['search']({'name':'Butter Chicken'}, (err, data) => {
 	}
 })
 
-mainWrapper.wiki['summary']({'title': 'India Gate'}, (err, data) => {
+mainWrapper.Wikipedia['summary']({'title': 'India Gate'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{
 		console.log(err, data)
 	}
+})
+mainWrapper.Wikipedia['defination']({'word': 'Water'}, (err, data) => {
+	if(!err && data){
+		console.log(data)
+	}else{
+		console.log(err, data)
+	}
+})
+
+mainWrapper["open_weather"]["current"]({'lat' : '13.0827','lon': '80.2707'},(err,data)=>{
+	console.log(data)
+
 })
