@@ -1,7 +1,7 @@
 'use strict'
 
 const req = require('request');
-const assert = require('assert');
+const async = require('async')
 
 const Wiki = () => ({
 	getSummary: (more= {'title':''}, callback) => {
@@ -12,28 +12,49 @@ const Wiki = () => ({
 				'Api-User-Agent': 'Example/1.0',
 			}
 		}
-		state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';  
-		state.url += '&titles=' + more['title'];
-		req(state, (err, res, body) => {
-			if(!err && res.statusCode === 200){
-				console.log("wikifunction")
-				let p = new Promise((resolve, reject) => {
-					resolve(JSON.parse(body)['query']['pages']);
-				});
-				p.then( (data) => {
-					console.log(data)
-					//Wiki().getURL(Object.keys(data)[0], callback)
-					callback(null, data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));
+		let str = ''
+		async.each(more['title'].split(' '), (item, cb) => {
+			let p = new Promise((resolve, reject) => {
+				resolve(item[0].toUpperCase())
+			});
+			p.then( (data) => {
+				str += data + item.substring(1, item.length) + ' '
+				cb(null)
+			})
+			.catch( (err) => {
+				console.log(err);
+			})
+
+		}, (err) => {
+			if(!err){
+				state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';  
+				state.url += '&titles=' + str;
+				console.log(str)
+				req(state, (err, res, body) => {
+					if(!err && res.statusCode === 200){
+						console.log("wikifunction")
+						let p = new Promise((resolve, reject) => {
+							resolve(JSON.parse(body)['query']['pages']);
+						});
+						p.then( (data) => {
+							console.log(data)
+							//Wiki().getURL(Object.keys(data)[0], callback)
+							callback(null, data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));
+						})
+						.catch( (error) => {
+							callback(err, null);
+						});
+					}
+					else if(err){
+						console.log(err, null);
+					}
 				})
-				.catch( (error) => {
-					assert.isNotOk(error,'Promise error');
-					//callback(err, null);
-				});
-			}
-			else if(err){
-				console.log(err, null);
+			}else{
+				console.log(err);
 			}
 		})
+
+			
 	},
 
 	getLocality: (more = {'title':''}, callback) => {

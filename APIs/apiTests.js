@@ -10,15 +10,16 @@ mainWrapper.food2fork['search']({'name':'Butter Chicken'}, (err, data) => {
 		console.log(err, data)
 	}
 })
-
-mainWrapper.wiki['summary']({'title': 'India Gate'}, (err, data) => {
+*/
+mainWrapper.Wikipedia['summary']({'title': 'india gate'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
 	}else{
 		console.log(err, data)
 	}
 })	
-*/
+
+/*
 mainWrapper.Wikipedia['definition']({'word':'cool'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
@@ -27,7 +28,7 @@ mainWrapper.Wikipedia['definition']({'word':'cool'}, (err, data) => {
 	}
 })
 newsQuery = ['financial markets', 'hollywood updates', 'science updates', 'top stories', 'world news']
-/*
+
 mainWrapper.bing['search']({
 	'searchObject': {
 		'searchQuery': 'world news',   //Fuzzy here
@@ -44,7 +45,7 @@ mainWrapper.bing['search']({
 	}
 })
 */
-
+/*
 mainWrapper.food2fork['searchNRecipe']({'name': 'Chiken Biryani'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
@@ -52,3 +53,4 @@ mainWrapper.food2fork['searchNRecipe']({'name': 'Chiken Biryani'}, (err, data) =
 		console.log(err, data)
 	}
 })
+*/

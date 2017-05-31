@@ -176,7 +176,7 @@ function categoryNewsParser(body,callback)
 
 module.exports = BingNews;
 
-
+/*
 var a = new BingNews()
 a.searchNews({'searchObject': {
 	'searchQuery': 'World News',
@@ -191,3 +191,4 @@ a.searchNews({'searchObject': {
 		console.log(err, data)
 	}
 })
+*/
