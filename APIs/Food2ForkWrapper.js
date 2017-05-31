@@ -1,7 +1,7 @@
 'use strict'
 
 const req = require('request');
-
+const async = require('async');
 
 const Food = () => ({
 
@@ -91,60 +91,47 @@ const Food = () => ({
 		};
 		state.url += '?key=' + key + '&q=' + more['name'] + '&sort=r';
 		req(state, (err, res, body) => {
+			
 			if(!err && res.statusCode === 200){
-				let p = new Promise((resolve, reject) => {
-					resolve(JSON.parse(body));
-				});
-				let out = []
-				p.then( (data) => {
-					//console.log(data)
-					for(var i =0; i<data['recipes'].length; ++i){
-					//data['recipes'].forEach( (data, count) => {
-						let rId = data['recipes'][i]['recipe_id']
-						let st = {
+				var out = []
+				async.each(JSON.parse(body)['recipes'], (item, cb) => {
+					let rId = item['recipe_id']
+					let st = {
 							method: 'GET',
 							url: 'http://food2fork.com/api/get'
 						};
-						st.url += '?key=' + key + '&rId=' + more['rId'];
-						let out = {}
-						req(st, (err, res, body) => {
-							if(!err && res.statusCode === 200){
-								let p = new Promise((resolve, reject) => {
-									resolve(JSON.parse(body));
-								});
-								p.then( (data) => {
-									o['image_url'] = data['recipe']['image_url']   // ***
-									o['title'] = data['recipe']['title']
-									//o['f2f_url'] = data['recipe']['f2f_url']
-									o['2'] = data['recipe']['ingredients']  // ***
-									o['3'] = data['recipe']['source_url']   // **** Necesarry! Contains How to make ****
-									//out['recipe_id'] = data['recipe']['recipe_id']
-									out.push(o)
-									//console.log(data)
-								}).catch( (error) => {
-									console.log(error);
-								})
-							}
-							else if(err){
-								console.log(err);
-							}
-						});
-						if(i>6){
-							return out;
+					st.url += '?key=' + key + '&rId=' + rId;
+					req(st, (err, res, body) => {
+						if(!err && res.statusCode === 200){
+							let p = new Promise((resolve, reject) => {
+								resolve(JSON.parse(body))
+							});
+							let o = {}
+							p.then( (data) =>{
+								o['image_url'] = data['recipe']['image_url']   // ****
+								o['title'] = data['recipe']['title']
+								//o['f2f_url'] = data['recipe']['f2f_url']
+								o['1'] = data['recipe']['ingredients']  // ****
+								o['2'] = data['recipe']['source_url']   // **** Necesarry! Contains How to make ****
+								//out['recipe_id'] = data['recipe']['recipe_id']
+								out.push(o)
+								cb(null)
+							}).catch( (e)=>{
+								console.log(e)
+							})
 						}
+					})
+				},(err)=>{
+					if(err){
+						console.log(err)
+					}else{
+						callback(null, out)
 					}
-				}).then( (data) => {
-					callback(null, data);
-				})
-				.catch( (error) => {
-					callback(error, null);
 				})
 			}
 		});
 	}
 });
-
-
 
 
 
