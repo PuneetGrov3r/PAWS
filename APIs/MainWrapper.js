@@ -3,7 +3,8 @@ const ow = require('./OpenWeatherWrapper.js');
 const mp = require('./MapsAPIWrapper.js');
 const wk = require('./WikiWrapper.js');
 const mrk = require('./MarkitAPIWrapper.js');
-const bnw = require('./bing_news.js');
+const bw = require('./bing_news.js');
+const bnw = new bw();
 
 exports.food2fork = {
 	"search": f2f().search,
@@ -38,6 +39,6 @@ exports.markit = {
 }
 
 exports.bing = {
-	//"caterogry": bnw().categoryNews,
-	//"search": bnw().searchNews
+	"caterogry": bnw.categoryNews,
+	"search": bnw.searchNews
 }
