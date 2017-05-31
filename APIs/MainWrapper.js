@@ -3,22 +3,24 @@ const ow = require('./OpenWeatherWrapper.js');
 const mp = require('./MapsAPIWrapper.js');
 const wk = require('./WikiWrapper.js');
 const mrk = require('./MarkitAPIWrapper.js');
+const bnw = require('./bing_news.js');
 
 exports.food2fork = {
-	"search": f2f('xxx').search(),
-	"recipe": f2f('xxx').recipe(),
-	"searchNRecipe": f2f('xxx').searchNRecipe() // Source URL Imp., contains how to make...
+	"search": f2f().search,
+	"recipe": f2f().recipe,
+	"searchNRecipe": f2f().searchNRecipe // Source URL Imp., contains how to make...
 }
 
 exports.maps = {
-	"places":mp('xxx').places(),
-	"direction":mp('xxx').direction()
+	"places":mp().places,
+	"direction":mp().direction
 }
 
 exports.weather = {
-	"current": ow('fd69a8bec4fb9cd33f7a1cf60f4871eb').currentWeather,
-	"forecast": ow('fd69a8bec4fb9cd33f7a1cf60f4871eb').forecast
+	"current": ow().currentWeather,
+	"forecast": ow().forecast
 }
+
 
 exports.wiki = {
 	"defination": wk().getDefination,
@@ -27,8 +29,15 @@ exports.wiki = {
 	"summary": wk().getSummary
 }
 
+
+
 exports.markit = {
-	"lookup": mrk().lookup(),
-	"price": mrk().price(),
-	"lookupNPrice": mrk().lookupNPrice()
+	"lookup": mrk().lookup,
+	"price": mrk().price,
+	"lookupNPrice": mrk().lookupNPrice
+}
+
+exports.bing = {
+	//"caterogry": bnw().categoryNews,
+	//"search": bnw().searchNews
 }

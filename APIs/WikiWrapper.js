@@ -1,9 +1,10 @@
 'use strict'
 
 const req = require('request');
+const assert = require('assert');
 
 const Wiki = () => ({
-	getSummary: (title, callback) => {
+	getSummary: (more= {'title':''}, callback) => {
 		let state = {
 			method: 'GET',
 			url: 'https://en.wikipedia.org/w/api.php',
@@ -12,18 +13,20 @@ const Wiki = () => ({
 			}
 		}
 		state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';  
-		state.url += '&titles=' + title;
+		state.url += '&titles=' + more['title'];
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
 					resolve(JSON.parse(body)['query']['pages']);
 				});
 				p.then( (data) => {
+					console.log(data)
 					//Wiki().getURL(Object.keys(data)[0], callback)
-					callback(null, data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));	// Yeah!
+					callback(null, data[Object.keys(data)[0]]['extract'].replace(/\(.*?\)/g, ""));
 				})
 				.catch( (error) => {
-					callback(err, null);
+					assert.isNotOk(error,'Promise error');
+					//callback(err, null);
 				});
 			}
 			else if(err){
@@ -32,7 +35,7 @@ const Wiki = () => ({
 		})
 	},
 
-	getLocality: (title, callback) => {
+	getLocality: (more = {'title':''}, callback) => {
 		let state = {
 			method: 'GET',
 			url: 'https://en.wikipedia.org/w/api.php',
@@ -41,7 +44,7 @@ const Wiki = () => ({
 			}
 		}
 		state.url += '?action=query&prop=categories&format=json&clshow=!hidden';
-		state.url += '&titles=' + title;
+		state.url += '&titles=' + more['title'];
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
@@ -78,7 +81,7 @@ const Wiki = () => ({
 		});
 	},
 
-	getURL: (title, callback) => {
+	getURL: (more = {'title':''}, callback) => {
 		let state = {
 			method: 'GET',
 			url: 'https://en.wikipedia.org/w/api.php',
@@ -87,7 +90,7 @@ const Wiki = () => ({
 			}
 		}
 		state.url += '?action=query&format=json&prop=extracts&exintro=&explaintext=&exsentences=4';  
-		state.url += '&titles=' + title;
+		state.url += '&titles=' + more['title'];
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
@@ -132,7 +135,7 @@ const Wiki = () => ({
 		})
 	},
 
-	getDefination: (word, callback) => {
+	getDefination: (more = {'word':''}, callback) => {
 		let state = {
 			method: 'GET',
 			url: 'https://en.wiktionary.org/w/api.php',
@@ -141,7 +144,7 @@ const Wiki = () => ({
 			}
 		}
 		state.url += '?format=json&action=query&prop=extracts';
-		state.url += '&titles=' + word;
+		state.url += '&titles=' + more['word'];
 
 		req(state, (er, re, b) => {
 			if(!er && re.statusCode === 200){
@@ -165,6 +168,7 @@ const Wiki = () => ({
 					console.log(data);
 				})
 				.catch( (err) => {
+					assert.isNotOk(error,'Promise error');
 					callback(err, null)
 				})
 			}else {
@@ -176,8 +180,8 @@ const Wiki = () => ({
 
 
 module.exports = Wiki
-/*
 
+/*
 Wiki().getDefination('cool', (err, data) => {
 	if(err){
 		console.log(err);

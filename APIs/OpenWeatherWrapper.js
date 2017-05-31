@@ -3,8 +3,10 @@
 
 const req = require('request');
 
-const Weather = (key) => ({
+
+const Weather = () => ({
 	currentWeather: (more = {lat : '28.612205', lon : '77.034980'}, callback) => {
+		const key = 'fd69a8bec4fb9cd33f7a1cf60f4871eb'
 		const state = {
 			method: 'GET',
 			url: 'http://api.openweathermap.org/data/2.5/weather'
@@ -41,6 +43,7 @@ const Weather = (key) => ({
 	},
 
 	forecast: (more = {lat : '28.612205', lon : '77.034980'}, callback) => {
+		const key = 'fd69a8bec4fb9cd33f7a1cf60f4871eb'
 		const state = {
 			method: 'GET',
 			url: 'http://api.openweathermap.org/data/2.5/forecast/daily'
@@ -80,15 +83,15 @@ const Weather = (key) => ({
 
 
 module.exports = Weather
-var more= {lat:'28.612205', lon:'77.034980'}
+//var more= {lat:'28.612205', lon:'77.034980'}
 //Weather('xxx').forecast(more, (err, data) => {
 //	if(!err && data){
 //		console.log(data)
 //	}
 //})
 
-Weather('219cda475ab3a9c0a17abe166b25a239').currentWeather(more, (err, data) => {
-	if(!err && data){
-		console.log(data)
-	}
-});
+//Weather('219cda475ab3a9c0a17abe166b25a239').currentWeather(more, (err, data) => {
+//	if(!err && data){
+//		console.log(data)
+//	}
+//});

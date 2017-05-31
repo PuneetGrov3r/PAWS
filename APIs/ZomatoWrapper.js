@@ -477,7 +477,8 @@ const Restaurant = (key) => ({
 					
 					//console.log(data);
 					//console.log(data['restaurants'][0]);
-					data['restaurants'].forEach( (d) => {
+					data['restaurants'].forEach( (d, i) => {
+						if(i>2) return
 						let o = {};
 						d = d['restaurant'];
 						o['res_id'] = d['R']['res_id'];
@@ -487,7 +488,6 @@ const Restaurant = (key) => ({
 						Extras().appendObject(o, d['cuisines'].split(', ')[0]); 
 					});
 					//console.log('Results Found: ' + data['results_found']);
-					
 					// data['results_shown']
 					//
 					//
@@ -641,10 +641,11 @@ const Custom = (key) => ({
 
 
 
-Common('xxx').cuisines(more = {city_id:'1', lat:'', lon:''}, (err, data) => {
+Common('8c566e4798eca2737581bd3c21390711').cuisines(more = {city_id:'1', lat:'', lon:''}, (err, data) => {
 	data.forEach( (cui, count) => {
 		//console.log(cui);
-		Restaurant('xxx').search({ entity_id : '', entity_type : '', q : '',
+		if(count>2) return
+		Restaurant('8c566e4798eca2737581bd3c21390711').search({ entity_id : '', entity_type : '', q : '',
 						start : '', count : '', lat : '28.6118815',
 						lon : '77.0345796', radius : '10000', cuisines : cui['cuisine']['cuisine_id'], establishment_type : '',
 						collection_id : '', category : '', sort : 'rating', order : 'desc' });

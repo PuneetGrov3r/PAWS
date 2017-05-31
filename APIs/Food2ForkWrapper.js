@@ -3,9 +3,10 @@
 const req = require('request');
 
 
-const Food = (key) => ({
+const Food = () => ({
 
-	search: (name, callback) => {
+	search: (more = {'name':''} , callback) => {
+		const key = 'b5a638f71542f07243faa81bac10817a'
 		let state = {
 			method: 'GET',
 			url: 'http://food2fork.com/api/search'
@@ -17,7 +18,7 @@ const Food = (key) => ({
 		//
 		//
 		//
-		state.url += '?key=' + key + '&q=' + name + '&sort=r';
+		state.url += '?key=' + key + '&q=' + more['name'] + '&sort=r';
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
@@ -36,23 +37,24 @@ const Food = (key) => ({
 						out['food'].push(d)
 						//console.log(out);
 					}
-				})
-				.then( (data) => {
-					callback(null, out)
-				})
-				.catch( (error) => {
+				}).then( (data) => {
+					if(data){
+						callback(null, out)
+					}
+				}).catch( (error) => {
 					callback(error, null);
 				})
 			}
 		});
 	},
 
-	recipe: (rId, callback) => {
+	recipe: (more = {'rId': ''}, callback) => {
+		const key = 'b5a638f71542f07243faa81bac10817a'
 		let state = {
 			method: 'GET',
 			url: 'http://food2fork.com/api/get'
 		};
-		state.url += '?key=' + key + '&rId=' + rId;
+		state.url += '?key=' + key + '&rId=' + more['rId'];
 		var out = {}
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
@@ -66,10 +68,11 @@ const Food = (key) => ({
 					out['recipe_id'] = data['recipe']['recipe_id']
 					out['image_url'] = data['recipe']['image_url']   // ***
 					out['title'] = data['recipe']['title']
-					callback(null, out)
+					if(out){
+						callback(null, out)
+					}
 					//console.log(data)
-				})
-				.catch( (error) => {
+				}).catch( (error) => {
 					console.log(error);
 				})
 			}
@@ -79,12 +82,13 @@ const Food = (key) => ({
 		});
 	},
 
-	searchNRecipe: (name, callback) =>{
+	searchNRecipe: (more = {'name': ''}, callback) =>{
+		const key = 'b5a638f71542f07243faa81bac10817a'
 		let state = {
 			method: 'GET',
 			url: 'http://food2fork.com/api/search'
 		};
-		state.url += '?key=' + key + '&q=' + name + '&sort=r';
+		state.url += '?key=' + key + '&q=' + more['name'] + '&sort=r';
 		req(state, (err, res, body) => {
 			if(!err && res.statusCode === 200){
 				let p = new Promise((resolve, reject) => {
@@ -92,7 +96,7 @@ const Food = (key) => ({
 				});
 				p.then( (data) => {
 					let rId = data['recipes'][0]['recipe_id']
-					Food(key).recipe(rId, callback)
+					Food(key).recipe({'rId': rId}, callback)
 				})
 				.catch( (error) => {
 					callback(error, null);
