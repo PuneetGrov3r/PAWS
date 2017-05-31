@@ -181,7 +181,7 @@ const Wiki = () => ({
 		
 	},
 
-	getDefination: (more = {'word':''}, callback) => {
+	getDefinition: (more = {'word':''}, callback) => {
 		let state = {
 			method: 'GET',
 			url: 'https://en.wiktionary.org/w/api.php',

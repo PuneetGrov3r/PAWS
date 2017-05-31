@@ -69,8 +69,16 @@ const Markit = () => ({
 						resolve(JSON.parse(body));
 					});
 					p1.then( (data) => {
-						data['Data']['Timestamp'] = new Date(data['Data']['Timestamp']).toDateString()
-						out.push(data['Data'])
+						let obj ={}
+						obj['Title'] = data['Data']['Name']
+						obj['Date'] = new Date(data['Data']['Timestamp']).toDateString()
+						obj['Symbol'] = data['Data']['Symbol']
+						obj['LastPrice'] = data['Data']['LastPrice']
+						obj['High_Open_Low'] = data['Data']['High'] + ' ~ ' + data['Data']['Open'] +  ' ~ ' + data['Data']['Low']
+						obj['PercentChange'] = data['Data']['ChangePercent']
+						obj['MarketCap'] = data['Data']['MarketCap']
+						obj['Volume'] = data['Data']['Volume']
+						out.push(obj)
 						callback(null, out);
 					})
 					.catch( (err) => {

@@ -23,16 +23,16 @@ exports.open_weather = {
 	"forecast": ow().forecast
 }
 
-//done
+//done //done
 exports.Wikipedia = {
-	"definition": wk().getDefination,
+	"definition": wk().getDefinition,
 	"url": wk().getSummary,  // takes name of article as argument same as getSummary
 	"locality": wk().getLocality,
 	"summary": wk().getURL
 }
 
 
-//done
+//done //done
 exports.markit = {
 	"lookup": mrk().lookup,
 	"price": mrk().price,
