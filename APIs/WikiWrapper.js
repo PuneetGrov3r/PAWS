@@ -212,7 +212,7 @@ const Wiki = () => ({
 						}
 					}
 					//console.log(data);
-					out[0]['Definition'] = data
+					out[0]['Definition'] = data.join('\n')
 					callback(null, out)
 				})
 				.catch( (err) => {
