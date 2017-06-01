@@ -4,6 +4,7 @@ const request = require('request');
 const co = require('co');
 const fs = require('fs');
 const async = require('async');
+const fuzz = require('../pythonIntegrate.js');
 
 const Extras = () => ({
 	appendObject: (obj, name) => {
@@ -437,7 +438,7 @@ const Restaurant = () => ({
 
 	search: (more = { entity_id : '1', entity_type : 'city', q : '',
 						start : '0', count : '10', lat : '28.592140',
-						lon : '77.046051', radius : '50000', cuisines : '148, 85, 40, 82', establishment_type : '16, 21, 1',
+						lon : '77.046051', radius : '50000', cuisines : 'burger', establishment_type : '16, 21, 1',
 						collection_id : '', category : '1, 2', sort : 'real_distance', order : 'desc' }, callback) => {
 		//
 		//	more = {
@@ -468,137 +469,144 @@ const Restaurant = () => ({
 		state.headers['user-key'] = key;
 		state.url += '/search?';
 		let temp = '';
-		//if(more.q && more.q.length !== 0) temp += 'q=' + more.q;
-		//if(more.entity_id && more.entity_id.length !== 0) temp += '&entity_id=' + more.entity_id;
-		temp += 'entity_id=1&entity_type=city&start=0&count=10&radius=50000&cuisines=148,85,40,82&establishment_type=16,21,1&category=1,2&sort=rating&order=desc'
-		//if(more.entity_type && more.entity_type.length !== 0) temp += '&entity_type=' + more.entity_type;
-		//if(more.start && more.start.length !== 0) temp += '&start=' + more.start;
-		//if(more.count && more.count.length !== 0) temp += '&count=' + more.count;
-		if(more.lat && more.lat.length !== 0) temp += '&lat=' + more.lat;
-		if(more.lon && more.lon.length !== 0) temp += '&lon=' + more.lon;
-		//if(more.radius && more.radius.length !== 0) temp += '&radius=' + more.radius;
-		//if(more.cuisines && more.cuisines.length !== 0) temp += '&cuisines=' + more.cuisines;
-		//if(more.establishment_type && more.establishment_type.length !== 0) temp += '&establishment_type=' + more.establishment_type;
-		//if(more.collection_id && more.collection_id.length !== 0) temp += '&collection_id=' + more.collection_id;
-		//if(more.category && more.category.length !== 0) temp += '&category=' + more.category;
-		//if(more.sort && more.sort.length !== 0) temp += '&sort=' + more.sort;
-		//if(more.order && more.order.length !== 0) temp += '&order=' + more.order;
-		state.url += temp;
-		let out = []
-		request(state, (err, res, body) => {
-			if(!err && res.statusCode === 200){
-				let p = new Promise((resolve, reject) => {
-					resolve(JSON.parse(body));
-				});
-				p.then((data) => {
-					
-					async.each(data['restaurants'], (item, cb) =>{
-						//console.log(item)
-						let res_id = item['restaurant']['R']['res_id']
-						let state = {
-							url:"https://developers.zomato.com/api/v2.1",
-							method:'GET',
-							headers:{
-								'user-key': ''
-							},
-						};
-						state.headers['user-key'] = key;
-						state.url += '/restaurant?res_id=' + res_id;
-
-						request(state, (err, res, body) => {
-							if(!err && res.statusCode === 200){
-								let p = new Promise((resolve, reject) => {
-									resolve(JSON.parse(body));
-								});
-								p.then( (data) => {
-									let o = {}
-									o['image_url'] = data['thumb']
-									o['title'] = data['name']
-									o['address'] = data['location']['address']
-									o['rating'] = data['user_rating']['aggregate_rating']
-									o['costForTwo'] = data['currency'] + ' ' + data['average_cost_for_two']
-									o['url'] = data['url']
-									out.push(o)
-									cb(null)
-									//console.log(data['name']);
-									//console.log('{' + data['location']['address'] + '}');
-									//console.log('Cuisines: ' + data['cuisines']);
-									//console.log('Avg. for two: ' + data['currency'] + data['average_cost_for_two'] + ' (Price Range: ' + data['price_range'] + ')');
-									//
-									//	data['menu_url']
-									//	data['has_online_delivery']
-									//	data['is_delivering_now']
-									//	data['events_url']
-									//	data['user_rating']['aggregate_rating']
-									//	data['has_table_booking']
-									//
-								})
-								.catch( (error) => {
-									callback(error, null);
-								});
-
-								
-							}
-						});
-
-
-
-
-
-					}, (err) => {
-						if(!err){
-							callback(null, out)
-						}else{
-							console.log(err)
+		const cuisines = {'burger': '168', 'cafe':'30', 'bbq':'193', 'bakery':'5', 'beverages':'270', 'biryani':'7', 'chinese':'25', 'continental':'35', 'fast food': '40',
+					'french':'45', 'grill':'181', 'hydrabadi':'49', 'ice creame': '233', 'indian': '148', 'pizza': '82', 'sandwich': '304', 'seafood':'83', 'south indian': '85',
+					'tea': '163', 'vegetarian':'308', 'italian':'55', 'japanese':'60', 'juices':'164', 'mithai':'1015', 'street food': '90'
 						}
+		//console.log(Object.keys(cuisines))
+		
+			//if(more.q && more.q.length !== 0) temp += 'q=' + more.q;
+			//if(more.entity_id && more.entity_id.length !== 0) temp += '&entity_id=' + more.entity_id;
+			temp += 'entity_id=1&entity_type=city&start=0&count=10&radius=50000&establishment_type=16,21,1,20&category=1,2&sort=rating&order=desc&cuisines=168,30,40,148,85'
+			//if(more.entity_type && more.entity_type.length !== 0) temp += '&entity_type=' + more.entity_type;
+			//if(more.start && more.start.length !== 0) temp += '&start=' + more.start;
+			//if(more.count && more.count.length !== 0) temp += '&count=' + more.count;
+			if(more.lat && more.lat.length !== 0) temp += '&lat=' + more.lat;
+			if(more.lon && more.lon.length !== 0) temp += '&lon=' + more.lon;
+			//if(more.radius && more.radius.length !== 0) temp += '&radius=' + more.radius;
+			//if(more.cuisines && more.cuisines.length !== 0) temp += '&cuisines=' + more.cuisines;
+			//if(more.establishment_type && more.establishment_type.length !== 0) temp += '&establishment_type=' + more.establishment_type;
+			//if(more.collection_id && more.collection_id.length !== 0) temp += '&collection_id=' + more.collection_id;
+			//if(more.category && more.category.length !== 0) temp += '&category=' + more.category;
+			//if(more.sort && more.sort.length !== 0) temp += '&sort=' + more.sort;
+			//if(more.order && more.order.length !== 0) temp += '&order=' + more.order;
+			state.url += temp;
+			let out = []
+			request(state, (err, res, body) => {
+				if(!err && res.statusCode === 200){
+					let p = new Promise((resolve, reject) => {
+						resolve(JSON.parse(body));
+					});
+					p.then((data) => {
+						
+						async.each(data['restaurants'], (item, cb) =>{
+							//console.log(item)
+							let res_id = item['restaurant']['R']['res_id']
+							let state = {
+								url:"https://developers.zomato.com/api/v2.1",
+								method:'GET',
+								headers:{
+									'user-key': ''
+								},
+							};
+							state.headers['user-key'] = key;
+							state.url += '/restaurant?res_id=' + res_id;
+
+							request(state, (err, res, body) => {
+								if(!err && res.statusCode === 200){
+									let p = new Promise((resolve, reject) => {
+										resolve(JSON.parse(body));
+									});
+									p.then( (data) => {
+										let o = {}
+										o['image_url'] = data['thumb']
+										o['title'] = data['name']
+										o['address'] = data['location']['address']
+										o['rating'] = data['user_rating']['aggregate_rating']
+										o['costForTwo'] = data['currency'] + ' ' + data['average_cost_for_two']
+										o['url'] = data['url']
+										out.push(o)
+										cb(null)
+										//console.log(data['name']);
+										//console.log('{' + data['location']['address'] + '}');
+										//console.log('Cuisines: ' + data['cuisines']);
+										//console.log('Avg. for two: ' + data['currency'] + data['average_cost_for_two'] + ' (Price Range: ' + data['price_range'] + ')');
+										//
+										//	data['menu_url']
+										//	data['has_online_delivery']
+										//	data['is_delivering_now']
+										//	data['events_url']
+										//	data['user_rating']['aggregate_rating']
+										//	data['has_table_booking']
+										//
+									})
+									.catch( (error) => {
+										callback(error, null);
+									});
+
+									
+								}
+							});
+
+
+
+
+
+						}, (err) => {
+							if(!err){
+								callback(null, out)
+							}else{
+								console.log(err)
+							}
+						})
+						//console.log(data);
+						//console.log(data['restaurants'][0]);
+						//data['restaurants'].forEach( (d, i) => {
+						//	if(i>2) return
+						//	let o = {};
+						//	d = d['restaurant'];
+						//	o['res_id'] = d['R']['res_id'];
+						//	o['name'] = d['name'];
+						//	//o['establishment_types'] = d['establishment_types'];
+						//	//console.log(o);
+						//	//Extras().appendObject(o, d['cuisines'].split(', ')[0]); 
+						//});
+						//console.log('Results Found: ' + data['results_found']);
+						// data['results_shown']
+						//
+						//
+						//callback(null, [data['restaurants'], more.cuisines]);
+						//
+						//
+						//data['restaurants'].forEach((restaurant) => {
+						//	let res = restaurant['restaurant'];
+						//	console.log(res['name']);
+						//	console.log(res['location']['address']);
+						//	// res['location']['city']
+						//	// res['location']['city_id']
+						//	// res['location']['latitude']
+						//	// res['location']['country_id']
+						//	// res['locality']['zipcode']
+						//	console.log(res['cuisines']);
+						//	console.log(res['currency'] + res['average_cost_for_two'] + ' (' + res['price_range'] + ')');
+						//	console.log(res['offers']);
+						//	console.log(res['user_rating']['aggregate_rating']);
+						//	console.log(res['menu_url']);
+						//	console.log(res['has_online_delivery']);
+						//	console.log(res['is_delivering_now']);
+						//	console.log(res['order_url']);
+						//	console.log(res['has_table_booking']);
+						//	console.log(res['events_url']);
+						//	console.log(res['establishment_types'])
+						//});
 					})
-					//console.log(data);
-					//console.log(data['restaurants'][0]);
-					//data['restaurants'].forEach( (d, i) => {
-					//	if(i>2) return
-					//	let o = {};
-					//	d = d['restaurant'];
-					//	o['res_id'] = d['R']['res_id'];
-					//	o['name'] = d['name'];
-					//	//o['establishment_types'] = d['establishment_types'];
-					//	//console.log(o);
-					//	//Extras().appendObject(o, d['cuisines'].split(', ')[0]); 
-					//});
-					//console.log('Results Found: ' + data['results_found']);
-					// data['results_shown']
-					//
-					//
-					//callback(null, [data['restaurants'], more.cuisines]);
-					//
-					//
-					//data['restaurants'].forEach((restaurant) => {
-					//	let res = restaurant['restaurant'];
-					//	console.log(res['name']);
-					//	console.log(res['location']['address']);
-					//	// res['location']['city']
-					//	// res['location']['city_id']
-					//	// res['location']['latitude']
-					//	// res['location']['country_id']
-					//	// res['locality']['zipcode']
-					//	console.log(res['cuisines']);
-					//	console.log(res['currency'] + res['average_cost_for_two'] + ' (' + res['price_range'] + ')');
-					//	console.log(res['offers']);
-					//	console.log(res['user_rating']['aggregate_rating']);
-					//	console.log(res['menu_url']);
-					//	console.log(res['has_online_delivery']);
-					//	console.log(res['is_delivering_now']);
-					//	console.log(res['order_url']);
-					//	console.log(res['has_table_booking']);
-					//	console.log(res['events_url']);
-					//	console.log(res['establishment_types'])
-					//});
-				})
-				.catch((err) => {
-					console.log('Error : ' + err);
-				})
-			}
-		});
+					.catch((err) => {
+						console.log('Error : ' + err);
+					})
+				}
+			});
 	}
+
 });
 
 

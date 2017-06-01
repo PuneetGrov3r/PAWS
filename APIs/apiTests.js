@@ -48,7 +48,7 @@ mainWrapper.bing['search']({
 	}
 })
 */
-
+/*
 mainWrapper.food2fork['searchNRecipe']({'name': 'Biryani'}, (err, data) => {
 	if(!err && data){
 		console.log(data)
@@ -56,7 +56,7 @@ mainWrapper.food2fork['searchNRecipe']({'name': 'Biryani'}, (err, data) => {
 		console.log(err, data)
 	}
 })
-
+*/
 /*
 mainWrapper.flipkart['search']({'searchQuery' : 'iPhone'}, (err, data) =>{
 	if(!err && data){

@@ -28,11 +28,11 @@ const Weather = () => ({
 						out['title'] = data['name']
 					}
 					out['main'] = data['weather'][0]['main']
-					out['temp'] = data['main']['temp']
-					out['pressure'] = data['main']['pressure']
-					out['humidity'] = data['main']['humidity']
-					out['visibility'] = data['visibility']
-					out['wind'] = data['wind']['speed']
+					out['temp'] = (parseInt(data['main']['temp'])-273.15).toString()
+					out['pressure'] = data['main']['pressure'] + ' hPa'
+					out['humidity'] = data['main']['humidity'] + ' %'
+					out['visibility'] = data['visibility'] + ' m'
+					out['wind'] = data['wind']['speed'] + ' m/sec'
 					out['clouds'] = data['clouds']['all']
 					o.push(out);
 					callback(null, o);
@@ -68,13 +68,13 @@ const Weather = () => ({
 						let obj = {}
 						obj['title'] = new Date(el['dt']*1000).toDateString()
 						obj['image_url'] = 'http://openweathermap.org/img/w/' + el['weather'][0]['icon'] + '.png'
-						obj['pressure'] = el['pressure']
-						obj['humidity'] = el['humidity']
-						obj['wind'] = el['speed']
+						obj['pressure'] = el['pressure'] + ' hPa'
+						obj['humidity'] = el['humidity'] + ' %'
+						obj['wind'] = el['speed'] + ' mps'
 						obj['clouds'] = el['clouds']
 						if(el['rain']) obj['rain'] = el['rain']
-						obj['temp_min'] = el['temp']['min']
-						obj['temp_max'] = el['temp']['max']
+						obj['temp_min'] = (parseInt(el['temp']['min'])-273.15).toString()
+						obj['temp_max'] =  (parseInt(el['temp']['max'])-273.15).toString()
 						out.push(obj)
 					});
 					callback(null, out)
