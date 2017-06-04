@@ -1,7 +1,7 @@
 ![Logo](static/logo1.png "Personal Assitant for Web Services")
 > Personal Assistant for exploiting web services
 
-How to set up:
+### How to set up:
 
 1. Download Stanford Parser from https://nlp.stanford.edu/software/stanford-parser-full-2016-10-31.zip, unzip it in one folder above the main directory and rename it to 'stanford-parser',
 2. Install nltk package for 'python 3' by `pip install nltk` or `pip3 install nltk` and download all the data files by command `nltk.download()` after importing nltk in python terminal,
