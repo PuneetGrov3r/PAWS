@@ -1,4 +1,4 @@
-![Logo](static/logo.png "Personal Assitant for Web Services")
+![Logo](static/logo1.png "Personal Assitant for Web Services")
 
 
 How to set up:
