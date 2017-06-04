@@ -1,3 +1,7 @@
+![Personal Assitant for Web Services](static/logo1.png)
+> Personal Assistant for Exploiting Web Services
+
+
 How to set up:
 
 1. Download Stanford Parser from https://nlp.stanford.edu/software/stanford-parser-full-2016-10-31.zip, unzip it in one folder above the main directory and rename it to 'stanford-parser',
