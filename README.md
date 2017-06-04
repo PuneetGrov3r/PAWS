@@ -1,20 +1,13 @@
-CoreNLP : 
-http://nlp.stanford.edu/software/stanford-corenlp-full-2016-10-31.zip
-Model : 
-http://nlp.stanford.edu/software/stanford-english-kbp-corenlp-2016-10-31-models.jar 
-or 
-http://nlp.stanford.edu/software/stanford-english-corenlp-2016-10-31-models.jar 
+How to set up:
 
-Set the paths for the corresponding files
-
-Put the stanford files outside the git directory
-
-
-For starting the server
-
-1. Install nodemon if not installed 
-2. Run the command  - \#nodemon server.js
-3. Download ngrok
-4. In a different terminal run the instruction - \#./ngrok http 3000
-5. Use postman to send POST request to the url shown in ngrok terminal
-6. /startSession and /requestMessage  are working
+1. Download Stanford Parser from https://nlp.stanford.edu/software/stanford-parser-full-2016-10-31.zip, unzip it in one folder above the main directory and rename it to 'stanford-parser',
+2. Install nltk package for 'python 3' by `pip install nltk` or `pip3 install nltk` and download all the data files by command `nltk.download()` after importing nltk in python terminal,
+3. Go to the main directory and run command `npm install`,
+4. Install nodemon too by command `npm install nodemon`,
+5. Run Neo4j database if not already running,
+6. Set up keys for APIs in the 'APIs' directory, 
+7. Run the command  - \#`nodemon server.js` from main directory,
+8. Download ngrok,
+9. In a different terminal run the instruction - \#`./ngrok http 3000`,
+10. Use Postman to send POST request to the url shown in ngrok terminal,
+11. /startSession and /requestMessage  are working.
