@@ -1,4 +1,4 @@
-![Personal Assitant for Web Services](static/logo1.png)
+![Personal Assitant for Web Services](static/logo1.png "Personal Assitant for Web Services")
 > Personal Assistant for Exploiting Web Services
 
 
