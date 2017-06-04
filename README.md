@@ -1,5 +1,5 @@
 ![Logo](static/logo1.png "Personal Assitant for Web Services")
-
+> Personal Assistant for exploiting web services
 
 How to set up:
 
