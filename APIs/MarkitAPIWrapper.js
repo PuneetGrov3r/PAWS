@@ -6,7 +6,7 @@ const req = require('request');
 
 const Markit = () => ({
 	price: (more = {'ticker': ''}, callback) => {
-		const key = 'fd69a8bec4fb9cd33f7a1cf60f4871eb'
+		const key = ''
 		let state = {
 			method: 'GET',
 			url: 'http://dev.markitondemand.com/MODApis/Api/Quote/json'
@@ -25,7 +25,7 @@ const Markit = () => ({
 		})
 	},
 	lookup: (more= {'input':''}, callback) => {
-		const key = 'fd69a8bec4fb9cd33f7a1cf60f4871eb'
+		const key = ''
 		let state = {
 			method: 'GET',
 			url: 'http://dev.markitondemand.com/MODApis/Api/Lookup/json'
@@ -45,7 +45,7 @@ const Markit = () => ({
 	},
 
 	lookupNPrice: (more = {'input':''}, callback) =>{
-		const key = 'fd69a8bec4fb9cd33f7a1cf60f4871eb'
+		const key = ''
 		let state = {
 			method: 'GET',
 			url: 'http://dev.markitondemand.com/MODApis/Api/Lookup/json'

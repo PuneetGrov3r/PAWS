@@ -26,7 +26,7 @@ function BingNews()
 //Gets the news articles of a particular category
 BingNews.prototype.categoryNews = function(more={'searchObject': {},'filter': '' },callback)
 {
-	const apiKey = '⁠⁠⁠a528bdf5e4b64ef79d7355fdfead5ec2'
+	const apiKey = '⁠⁠⁠'
 	//REST api end point for getting category news
 	var url = "https://api.cognitive.microsoft.com/bing/v5.0/news/";
 	//Assigning the http request properties to an object
@@ -63,7 +63,7 @@ BingNews.prototype.categoryNews = function(more={'searchObject': {},'filter': ''
 //Search news articles
 BingNews.prototype.searchNews = function(more= {'searchObject': {},'filter': ''},callback)
 {
-	const apiKey = '⁠⁠⁠a528bdf5e4b64ef79d7355fdfead5ec2'
+	const apiKey = '⁠⁠⁠'
 	//Checking if the required condition for filters are met
 	if(more['searchObject']['searchQuery'] === undefined)
 	{

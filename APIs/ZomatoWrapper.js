@@ -465,7 +465,7 @@ const Restaurant = () => ({
 				'user-key': ''
 			},
 		};
-		const key = '8c566e4798eca2737581bd3c21390711'
+		const key = ''
 		state.headers['user-key'] = key;
 		state.url += '/search?';
 		let temp = '';

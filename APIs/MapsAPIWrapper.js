@@ -6,7 +6,7 @@ const request = require('request');
 
 const Maps = () => ({
 	places: (more={lat:'',lon:'',radius:'',type:'',name:''}, callback) => {
-		const key = 'AIzaSyA9rnY3Ud1q3vswXsYFjd3qFFnvTDmMBmI'
+		const key = ''
 		let state = {
 			method: 'GET',
 			url: 'https://maps.googleapis.com/maps/api/place/nearbysearch/json'
@@ -60,7 +60,7 @@ const Maps = () => ({
 	},
 
 	direction: (more={origin:'', destination:'', mode:'driving'}, callback) => {
-		const key = 'AIzaSyA9rnY3Ud1q3vswXsYFjd3qFFnvTDmMBmI'
+		const key = ''
 		let state = {
 			method: 'GET',
 			url: 'https://maps.googleapis.com/maps/api/directions/json'
@@ -105,7 +105,7 @@ const Maps = () => ({
 		})
 	},
 	geocoding: (more={'address':''}, callback) => {
-		const key = 'AIzaSyA9rnY3Ud1q3vswXsYFjd3qFFnvTDmMBmI'
+		const key = ''
 		let state = {
 			method: 'GET',
 			url: 'https://maps.googleapis.com/maps/api/geocode/json?address='

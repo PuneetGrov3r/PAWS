@@ -6,7 +6,7 @@ const async = require('async');
 const Food = () => ({
 
 	search: (more = {'name':''} , callback) => {
-		const key = 'b5a638f71542f07243faa81bac10817a'
+		const key = ''
 		let state = {
 			method: 'GET',
 			url: 'http://food2fork.com/api/search'
@@ -50,7 +50,7 @@ const Food = () => ({
 	},
 
 	recipe: (more = {'rId': ''}, callback) => {
-		const key = 'b5a638f71542f07243faa81bac10817a'
+		const key = ''
 		let state = {
 			method: 'GET',
 			url: 'http://food2fork.com/api/get'
@@ -83,7 +83,7 @@ const Food = () => ({
 	},
 
 	searchNRecipe: (more = {'name': ''}, callback) =>{
-		const key = 'b5a638f71542f07243faa81bac10817a'
+		const key = ''
 		let state = {
 			method: 'GET',
 			url: 'http://food2fork.com/api/search'
@@ -122,7 +122,7 @@ const Food = () => ({
 					})
 				},(err)=>{
 					if(err){
-						console.log(err)
+						console.log(err)      
 					}else{
 						callback(null, out)
 					}

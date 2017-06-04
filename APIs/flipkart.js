@@ -110,8 +110,8 @@ Flipkart.prototype.getThisCategoryLink = function(opts,callback)
 }
 Flipkart.prototype.searchProduct = function(searchObject,callback)
 {
-	let affId = 'rvarunweb'
-	let affToken = '8a60ea55b5ce4fd6ae895b843c754180'
+	let affId = ''
+	let affToken = ''
 	var url="https://affiliate-api.flipkart.net/affiliate/1.0/search.json";
 	var reqOpts= {
 		url : url,	
