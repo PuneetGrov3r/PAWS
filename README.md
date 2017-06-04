@@ -1,6 +1,6 @@
 How to set up:
 
-1. Download Stanford Parser from https://nlp.stanford.edu/software/stanford-parser-full-2016-10-31.zip, unzip it in one folder above the main direcotory and rename it to 'stanford-parser',
+1. Download Stanford Parser from https://nlp.stanford.edu/software/stanford-parser-full-2016-10-31.zip, unzip it in one folder above the main directory and rename it to 'stanford-parser',
 2. Go to the main directory and run command `npm install`,
 3. Install nodemon too by command `npm install nodemon`,
 4. Run Neo4j database if not already running,
