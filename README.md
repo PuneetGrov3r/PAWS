@@ -1,7 +1,7 @@
 ![Logo](static/logo1.png "Personal Assitant for Web Services")
 > Personal Assistant for exploiting web services
 
-![PAWS Overview](PAWS.gif)
+![PAWS Overview](PAWS2.gif)
 
 ### How to set up:
 
