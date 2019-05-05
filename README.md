@@ -20,6 +20,6 @@
 
 <object data="001 Report.pdf" type="application/pdf" width="700px" height="700px">
     <embed src="001 Report.pdf">
-        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="001 Report.pdf">Download PDF</a>.</p>
+        <p>Project Report: <a href="001 Report.pdf">Download PDF</a>.</p>
     </embed>
 </object>
