@@ -1,5 +1,6 @@
 ![Logo](static/logo1.png "Personal Assitant for Web Services")
 > Personal Assistant for exploiting web services
+[Project Report](https://docs.google.com/viewer?url=https://github.com/PuneetGrov3r/PAWS/raw/master/001%20Report.pdf)
 
 ![PAWS Overview](PAWS2.gif)
 
@@ -16,6 +17,3 @@
 9. In a different terminal run the instruction - \#`./ngrok http 3000`,
 10. Use Postman to send POST request to the url shown in ngrok terminal,
 11. /startSession and /requestMessage  are working.
-
-
-https://docs.google.com/viewer?url=https://github.com/PuneetGrov3r/PAWS/raw/master/001%20Report.pdf
