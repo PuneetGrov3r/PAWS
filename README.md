@@ -16,3 +16,10 @@
 9. In a different terminal run the instruction - \#`./ngrok http 3000`,
 10. Use Postman to send POST request to the url shown in ngrok terminal,
 11. /startSession and /requestMessage  are working.
+
+
+<object data="001 Report.pdf" type="application/pdf" width="700px" height="700px">
+    <embed src="001 Report.pdf">
+        <p>This browser does not support PDFs. Please download the PDF to view it: <a href="001 Report.pdf">Download PDF</a>.</p>
+    </embed>
+</object>
