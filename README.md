@@ -1,9 +1,9 @@
 ![Logo](static/logo1.png "Personal Assitant for Web Services")
 > Personal Assistant for exploiting web services
 
-## [Project Report](https://docs.google.com/viewer?url=https://github.com/PuneetGrov3r/PAWS/raw/master/001%20Report.pdf)
-
 ![PAWS Overview](PAWS2.gif)
+
+## > [Project Report](https://docs.google.com/viewer?url=https://github.com/PuneetGrov3r/PAWS/raw/master/001%20Report.pdf) <
 
 ### How to set up:
 
