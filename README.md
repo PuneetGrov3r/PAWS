@@ -18,8 +18,4 @@
 11. /startSession and /requestMessage  are working.
 
 
-<object data="001 Report.pdf" type="application/pdf" width="700px" height="700px">
-    <embed src="001 Report.pdf">
-        <p>Project Report: <a href="001 Report.pdf">Download PDF</a>.</p>
-    </embed>
-</object>
+https://docs.google.com/viewer?url=https://github.com/PuneetGrov3r/PAWS/raw/master/001%20Report.pdf
